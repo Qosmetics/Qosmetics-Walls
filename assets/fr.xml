@@ -1,0 +1,14 @@
+<resources>
+    <string name="QosmeticsDodgers:Preview:Default">Default Dodger (no preview)</string>
+    
+    <string name="QosmeticsDodgers:Settings:Settings">Dodger Settings</string>
+    <string name="QosmeticsDodgers:Settings:FakeGlowOff">Force Fake Glow Off</string>
+    <string name="QosmeticsDodgers:Settings:FakeGlowOffHoverHint">Whether to turn off the Fake Glow at all times</string>
+    <string name="QosmeticsDodgers:Settings:CoreOff">Force Core Off</string>
+    <string name="QosmeticsDodgers:Settings:CoreOffHoverHint">Whether to turn off the Wall Core at all times</string>
+    <string name="QosmeticsDodgers:Settings:FrameOff">Force Frame Off</string>
+    <string name="QosmeticsDodgers:Settings:FrameOffHoverHint">Whether to turn off the Wall Frame at all times</string>
+    <string name="QosmeticsDodgers:Settings:DisableReflections">Disable Reflections</string>
+    <string name="QosmeticsDodgers:Settings:DisableReflectionsHoverHint">Whether to make base game walls be reflected</string>
+
+</resources>
