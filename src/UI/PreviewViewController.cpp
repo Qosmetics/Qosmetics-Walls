@@ -95,7 +95,7 @@ namespace Qosmetics::Walls
         if (!currentPrefab)
         {
             DEBUG("No prefab found, must be default!");
-            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsDodgers:Preview:Default"));
+            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsBoxs:Preview:Default"));
             return;
         }
 

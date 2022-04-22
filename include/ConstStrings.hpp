@@ -12,6 +12,11 @@
 
 namespace ConstStrings
 {
+    CONST_STRING(ObstacleFakeGlow);
+    CONST_STRING(HideWrapper);
+    CONST_STRING(ObstacleCore);
+    CONST_STRING(DepthWrite);
+    CONST_STRING(ObstacleFrame);
     CONST_STRING(Frame);
     CONST_STRING(Core);
 }

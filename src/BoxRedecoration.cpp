@@ -1,0 +1,148 @@
+#include "logging.hpp"
+
+#include "ConstStrings.hpp"
+#include "CustomTypes/BoxColorHandler.hpp"
+#include "CustomTypes/BoxHandler.hpp"
+#include "CustomTypes/BoxParent.hpp"
+#include "CustomTypes/WallModelContainer.hpp"
+#include "Disabling.hpp"
+#include "config.hpp"
+#include "qosmetics-core/shared/RedecorationRegister.hpp"
+
+#include "GlobalNamespace/BeatmapObjectsInstaller.hpp"
+#include "GlobalNamespace/BoolSO.hpp"
+#include "GlobalNamespace/ColorScheme.hpp"
+#include "GlobalNamespace/ConditionalActivation.hpp"
+#include "GlobalNamespace/ConditionalMaterialSwitcher.hpp"
+#include "GlobalNamespace/GameplayCoreSceneSetupData.hpp"
+#include "GlobalNamespace/MaterialPropertyBlockController.hpp"
+#include "GlobalNamespace/ObstacleController.hpp"
+#include "UnityEngine/GameObject.hpp"
+#include "UnityEngine/Material.hpp"
+#include "UnityEngine/MeshFilter.hpp"
+#include "UnityEngine/MeshRenderer.hpp"
+#include "UnityEngine/Transform.hpp"
+
+/*
+    ObstaclePrefab
+        L HideWrapper
+        |   L ObstacleFrame
+        |   L ObstacleFakeGlow
+        L ObstacleCore
+            L Collider
+            L DepthWrite
+*/
+
+REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleController*, GlobalNamespace::BeatmapObjectsInstaller*)
+{
+    if (Qosmetics::Walls::Disabling::GetAnyDisabling())
+        return obstaclePrefab;
+
+    INFO("Redecorating Wall");
+    auto t = obstaclePrefab->get_transform();
+    auto obstacleCoreT = t->Find(ConstStrings::ObstacleCore());
+    auto depthWriteT = obstacleCoreT->Find(ConstStrings::DepthWrite());
+
+    depthWriteT->get_gameObject()->GetComponent<UnityEngine::Renderer*>()->set_enabled(false);
+
+    auto hideWrapperT = t->Find(ConstStrings::HideWrapper());
+    auto obstacleFrameT = hideWrapperT->Find(ConstStrings::ObstacleFrame());
+    auto obstacleFakeGlowT = hideWrapperT->Find(ConstStrings::ObstacleFakeGlow());
+
+    auto boxParent = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxParent*>();
+
+    auto boxHandler = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxHandler*>();
+    boxParent->handler = boxHandler;
+
+    auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
+    auto& globalConfig = Qosmetics::Walls::Config::get_config();
+
+    auto frameFilter = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
+    auto fakeGlowFilter = obstacleFakeGlowT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
+    auto coreFilter = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
+
+    if (wallModelContainer->currentWallObject)
+    {
+        DEBUG("There's a wall selected");
+        auto& config = wallModelContainer->GetWallConfig();
+        auto boxColorHandler = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
+        boxColorHandler->obstacleController = obstaclePrefab;
+
+        auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
+        auto coreRenderer = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
+
+        auto customCoreT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
+        auto customFrameT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+
+        if (config.get_disableFrame() || globalConfig.forceFrameOff) // frame needs to be off
+        {
+            DEBUG("Disable frame");
+            frameFilter->set_mesh(nullptr);
+            fakeGlowFilter->set_mesh(nullptr);
+        }
+        else
+        {
+            DEBUG("keep frame");
+            // doing this lets us keep the frame on
+            auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
+            conditionalActivation->dyn__value()->set_value(true);
+            conditionalActivation->dyn__activateOnFalse() = false;
+
+            if (config.get_disableFakeGlow() || globalConfig.forceFakeGlowOff)
+            {
+                DEBUG("Disable fake glow");
+                fakeGlowFilter->set_mesh(nullptr);
+            }
+            if (config.get_replaceFrameMesh())
+            {
+                DEBUG("Replace mesh");
+                frameFilter->set_mesh(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>()->get_sharedMesh());
+            }
+            if (config.get_replaceFrameMaterial())
+            {
+                DEBUG("Replace frame material");
+                frameRenderer->SetMaterialArray(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+            }
+        }
+
+        if (config.get_disableCore() || globalConfig.forceCoreOff) // core needs to be off
+        {
+            DEBUG("Disable core");
+            coreFilter->set_mesh(nullptr);
+        }
+        else
+        {
+            DEBUG("keep core");
+            if (config.get_replaceCoreMesh())
+            {
+                DEBUG("Replace mesh");
+                coreFilter->set_mesh(customCoreT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>()->get_sharedMesh());
+            }
+            if (config.get_replaceCoreMaterial())
+            {
+                DEBUG("Replace core material");
+                UnityEngine::Object::DestroyImmediate(obstacleCoreT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalMaterialSwitcher*>());
+                coreRenderer->SetMaterialArray(customCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+            }
+        }
+        auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
+        auto colorScheme = gameplayCoreSceneSetupData->dyn_colorScheme();
+
+        boxHandler->SetColor(colorScheme->get_obstaclesColor());
+    }
+    else
+    {
+        DEBUG("no custom wall");
+        if (globalConfig.forceFrameOff) // frame needs to be off
+        {
+            frameFilter->set_mesh(nullptr);
+            fakeGlowFilter->set_mesh(nullptr);
+        }
+        else if (globalConfig.forceFakeGlowOff) // just fake glow off
+            fakeGlowFilter->set_mesh(nullptr);
+        if (globalConfig.forceCoreOff) // core needs to be off
+            coreFilter->set_mesh(nullptr);
+    }
+
+    return obstaclePrefab;
+}

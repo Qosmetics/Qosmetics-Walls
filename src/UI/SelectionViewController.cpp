@@ -59,25 +59,25 @@ namespace Qosmetics::Walls
 
     void SelectionViewController::ReloadDescriptorList()
     {
-        std::vector<std::string> dodgers = {};
-        Qosmetics::Core::FileUtils::GetFilesInFolderPath("dodger", dodger_path, dodgers);
+        std::vector<std::string> boxs = {};
+        Qosmetics::Core::FileUtils::GetFilesInFolderPath("box", box_path, boxs);
         auto tableView = reinterpret_cast<QuestUI::TableView*>(descriptorList->tableView);
         int scrolledRow = tableView->get_scrolledRow();
 
         auto& descriptorSet = descriptorList->objectDescriptors;
         int current = 0;
-        for (auto& dodger : dodgers)
+        for (auto& box : boxs)
         {
             current++;
 
-            std::string filePath = fmt::format("{}/{}", dodger_path, dodger);
+            std::string filePath = fmt::format("{}/{}", box_path, box);
             auto orig = std::find_if(descriptorSet.begin(), descriptorSet.end(), [filePath](auto& d)
                                      { return d.get_filePath() == filePath; });
-            // check if the dodger was already parsed
+            // check if the box was already parsed
             if (orig != descriptorSet.end())
                 continue;
 
-            // get bytes from the zip file that a dodger is
+            // get bytes from the zip file that a box is
             std::vector<uint8_t> packageData;
             if (Qosmetics::Core::ZipUtils::GetBytesFromZipFile(filePath, "package.json", packageData))
             {
@@ -99,8 +99,8 @@ namespace Qosmetics::Walls
         // check each descriptor to see if it still exists on disk, if not it should be removed from the list
         for (auto it = descriptorSet.begin(); it != descriptorSet.end(); /* nothing */)
         {
-            auto itr = std::find(dodgers.begin(), dodgers.end(), Qosmetics::Core::FileUtils::GetFileName(it->get_filePath()));
-            if (itr == dodgers.end())
+            auto itr = std::find(boxs.begin(), boxs.end(), Qosmetics::Core::FileUtils::GetFileName(it->get_filePath()));
+            if (itr == boxs.end())
                 it = descriptorSet.erase(it);
             else
                 it++;
@@ -167,7 +167,7 @@ namespace Qosmetics::Walls
         // something to do after we changed the object, like update preview
         auto wallModelContainer = WallModelContainer::get_instance();
 
-        Qosmetics::Walls::Config::get_config().lastUsedDodger = wallModelContainer->GetWallConfig().get_isDefault() ? "" : Qosmetics::Core::FileUtils::GetFileName(wallModelContainer->GetDescriptor().get_filePath(), true);
+        Qosmetics::Walls::Config::get_config().lastUsedBox = wallModelContainer->GetWallConfig().get_isDefault() ? "" : Qosmetics::Core::FileUtils::GetFileName(wallModelContainer->GetDescriptor().get_filePath(), true);
         Qosmetics::Core::Config::SaveConfig();
         previewViewController->UpdatePreview(true);
     }

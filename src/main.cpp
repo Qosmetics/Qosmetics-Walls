@@ -1,4 +1,4 @@
-#include "UI/DodgerFlowCoordinator.hpp"
+#include "UI/BoxFlowCoordinator.hpp"
 #include "custom-types/shared/register.hpp"
 #include "hooking.hpp"
 #include "logging.hpp"
@@ -12,7 +12,7 @@
 
 #include "questui/shared/BeatSaberUI.hpp"
 
-QOSMETICS_FLOWCOORDINATOR_REGISTER(Dodgers, Qosmetics::Walls::DodgerFlowCoordinator*)
+QOSMETICS_FLOWCOORDINATOR_REGISTER(Boxs, Qosmetics::Walls::BoxFlowCoordinator*)
 {
     auto inactive_data = WallIcon_png::getData();
     auto inactive = QuestUI::BeatSaberUI::VectorToSprite(std::vector<uint8_t>(inactive_data, inactive_data + WallIcon_png::getLength()));
@@ -30,7 +30,7 @@ extern "C" void setup(ModInfo& info)
 
 extern "C" void load()
 {
-    mkpath(dodger_path);
+    mkpath(box_path);
     auto& logger = Qosmetics::Walls::Logging::getLogger();
     Hooks::InstallHooks(logger);
     custom_types::Register::AutoRegister();

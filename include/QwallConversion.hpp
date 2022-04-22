@@ -25,19 +25,27 @@ namespace Qosmetics::Walls::QwallConversion
     struct LegacyConfig
     {
         bool replaceCoreMaterial = false;
-        bool replaceFrameMaterial = false;
         bool replaceCoreMesh = false;
+        bool disableFrame = false;
+        bool disableFakeGlow = false;
+        bool replaceFrameMaterial = false;
         bool replaceFrameMesh = false;
-        bool removeFakeGlow = false;
+        bool scoreSubmissionDisabled = false;
+        bool moreThan1Core = false;
+        bool moreThan1Frame = false;
 
         LegacyConfig(){};
         LegacyConfig(const rapidjson::Document& doc)
         {
             replaceCoreMaterial = doc["replaceCoreMaterial"].GetBool();
-            replaceFrameMaterial = doc["replaceFrameMaterial"].GetBool();
             replaceCoreMesh = doc["replaceCoreMesh"].GetBool();
+            disableFrame = doc["disableFrame"].GetBool();
+            disableFakeGlow = doc["disableFakeGlow"].GetBool();
+            replaceFrameMaterial = doc["replaceFrameMaterial"].GetBool();
             replaceFrameMesh = doc["replaceFrameMesh"].GetBool();
-            removeFakeGlow = doc["removeFakeGlow"].GetBool();
+            scoreSubmissionDisabled = doc["scoreSubmissionDisabled"].GetBool();
+            moreThan1Core = doc["moreThan1Core"].GetBool();
+            moreThan1Frame = doc["moreThan1Frame"].GetBool();
         }
     };
 

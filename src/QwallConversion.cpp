@@ -33,7 +33,7 @@ namespace Qosmetics::Walls::QwallConversion
         std::vector<std::string> result;
 
         Qosmetics::Core::FileUtils::GetFilesInFolderPath("qwall", wall_path, result);
-        Qosmetics::Core::FileUtils::GetFilesInFolderPath("qwall", dodger_path, result);
+        Qosmetics::Core::FileUtils::GetFilesInFolderPath("qwall", box_path, result);
         return result;
     }
 
@@ -46,12 +46,12 @@ namespace Qosmetics::Walls::QwallConversion
             std::string fileName(Qosmetics::Core::FileUtils::GetFileName(file, true));
             std::replace(fileName.begin(), fileName.end(), ' ', '_');
 
-            std::string convertedFilePath = fmt::format("{}/{}.dodger", dodger_path, fileName);
+            std::string convertedFilePath = fmt::format("{}/{}.box", box_path, fileName);
 
             if (!fileexists(convertedFilePath))
             {
-                if (fileexists(fmt::format("{}/{}", dodger_path, file)))
-                    toConvert.emplace_back(std::make_pair(fmt::format("{}/{}", dodger_path, file), convertedFilePath));
+                if (fileexists(fmt::format("{}/{}", box_path, file)))
+                    toConvert.emplace_back(std::make_pair(fmt::format("{}/{}", box_path, file), convertedFilePath));
                 else
                     toConvert.emplace_back(std::make_pair(fmt::format("{}/{}", wall_path, file), convertedFilePath));
             }
@@ -115,7 +115,7 @@ namespace Qosmetics::Walls::QwallConversion
             configDoc.Parse(configText);
             LegacyConfig legacyConfig = LegacyConfig(configDoc);
 
-            Qosmetics::Walls::WallObjectConfig actualConfig(legacyConfig.replaceCoreMaterial, legacyConfig.replaceFrameMaterial, legacyConfig.replaceCoreMesh, legacyConfig.replaceFrameMesh, legacyConfig.removeFakeGlow);
+            Qosmetics::Walls::WallObjectConfig actualConfig(legacyConfig.replaceCoreMaterial, legacyConfig.replaceFrameMaterial, legacyConfig.replaceCoreMesh, legacyConfig.replaceFrameMesh, legacyConfig.disableFrame, legacyConfig.disableFakeGlow);
 
             INFO("Making package.json...");
             Qosmetics::Core::Manifest manifest(newPath, androidFileName, actualDescriptor, actualConfig);
@@ -152,7 +152,8 @@ namespace Qosmetics::Walls::QwallConversion
             zip_close(zip);
             bundle->Unload(true);
 
-            deletefile(oldPath);
+            // TODO: make this actually delete again
+            // deletefile(oldPath);
             co_yield nullptr;
         }
 

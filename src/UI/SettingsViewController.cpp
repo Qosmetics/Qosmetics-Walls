@@ -51,7 +51,7 @@ namespace Qosmetics::Walls
         if (firstActivation)
         {
             auto localization = Diglett::Localization::get_instance();
-            Qosmetics::Core::UIUtils::AddHeader(get_transform(), localization->get("QosmeticsDodgers:Settings:Settings"), Sombrero::FastColor::red());
+            Qosmetics::Core::UIUtils::AddHeader(get_transform(), localization->get("QosmeticsBoxs:Settings:Settings"), Sombrero::FastColor::red());
             auto container = CreateScrollableSettingsContainer(this);
 
             auto externalComponents = container->GetComponent<QuestUI::ExternalComponents*>();
@@ -59,10 +59,10 @@ namespace Qosmetics::Walls
             scrollTransform->set_sizeDelta(Sombrero::FastVector2::zero());
 
             auto containerT = container->get_transform();
-            TOGGLE(forceFakeGlowOff, "QosmeticsDodgers:Settings:FakeGlowOff");
-            TOGGLE(forceCoreOff, "QosmeticsDodgers:Settings:CoreOff");
-            TOGGLE(forceFrameOff, "QosmeticsDodgers:Settings:FrameOff");
-            TOGGLE(disableReflections, "QosmeticsDodgers:Settings:DisableReflections");
+            TOGGLE(forceFakeGlowOff, "QosmeticsBoxs:Settings:FakeGlowOff");
+            TOGGLE(forceCoreOff, "QosmeticsBoxs:Settings:CoreOff");
+            TOGGLE(forceFrameOff, "QosmeticsBoxs:Settings:FrameOff");
+            TOGGLE(disableReflections, "QosmeticsBoxs:Settings:DisableReflections");
         }
         else if (justChangedProfile)
         {

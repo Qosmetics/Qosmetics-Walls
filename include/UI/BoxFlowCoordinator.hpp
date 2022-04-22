@@ -9,7 +9,7 @@
     DECLARE_OVERRIDE_METHOD(retval, name, il2cpp_utils::il2cpp_type_check::MetadataGetter<mptr>::get(), __VA_ARGS__)
 #endif
 
-DECLARE_CLASS_CODEGEN(Qosmetics::Walls, DodgerFlowCoordinator, HMUI::FlowCoordinator,
+DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxFlowCoordinator, HMUI::FlowCoordinator,
                       DECLARE_INSTANCE_FIELD(HMUI::ViewController*, settingsViewController);
                       DECLARE_INSTANCE_FIELD(HMUI::ViewController*, selectionViewController);
                       DECLARE_INSTANCE_FIELD(HMUI::ViewController*, previewViewController);

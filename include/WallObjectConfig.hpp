@@ -55,14 +55,16 @@ namespace Qosmetics::Walls
     {
     public:
         WallObjectConfig() : Qosmetics::Core::BasicConfig(){};
-        WallObjectConfig(bool replaceCoreMaterial, bool replaceFrameMaterial, bool replaceCoreMesh, bool replaceFrameMesh, bool removeFakeGlow) : Qosmetics::Core::BasicConfig(), replaceCoreMaterial(replaceCoreMaterial), replaceFrameMaterial(replaceFrameMaterial), replaceCoreMesh(replaceCoreMesh), replaceFrameMesh(replaceFrameMesh), removeFakeGlow(removeFakeGlow){};
+        WallObjectConfig(bool replaceCoreMaterial, bool replaceFrameMaterial, bool replaceCoreMesh, bool replaceFrameMesh, bool disableFrame, bool disableFakeGlow) : Qosmetics::Core::BasicConfig(), replaceCoreMaterial(replaceCoreMaterial), replaceFrameMaterial(replaceFrameMaterial), replaceCoreMesh(replaceCoreMesh), replaceFrameMesh(replaceFrameMesh), disableFrame(disableFrame), disableFakeGlow(disableFakeGlow), isLegacy(true){};
         WallObjectConfig(const rapidjson::Value& value) : Qosmetics::Core::BasicConfig(value)
         {
             GET_BOOL(replaceCoreMaterial);
             GET_BOOL(replaceFrameMaterial);
             GET_BOOL(replaceCoreMesh);
             GET_BOOL(replaceFrameMesh);
-            GET_BOOL(removeFakeGlow);
+            GET_BOOL(disableCore);
+            GET_BOOL(disableFrame);
+            GET_BOOL(disableFakeGlow);
             GET_BOOL(isLegacy);
             isDefault = false;
         }
@@ -75,7 +77,9 @@ namespace Qosmetics::Walls
             ADD_BOOL(replaceFrameMaterial);
             ADD_BOOL(replaceCoreMesh);
             ADD_BOOL(replaceFrameMesh);
-            ADD_BOOL(removeFakeGlow);
+            ADD_BOOL(disableCore);
+            ADD_BOOL(disableFrame);
+            ADD_BOOL(disableFakeGlow);
             ADD_BOOL(isLegacy);
             return val;
         }
@@ -84,7 +88,9 @@ namespace Qosmetics::Walls
         CONST_GETTER(replaceFrameMaterial);
         CONST_GETTER(replaceCoreMesh);
         CONST_GETTER(replaceFrameMesh);
-        CONST_GETTER(removeFakeGlow);
+        CONST_GETTER(disableCore);
+        CONST_GETTER(disableFrame);
+        CONST_GETTER(disableFakeGlow);
         CONST_GETTER(isLegacy);
         CONST_GETTER(isDefault);
 
@@ -93,7 +99,9 @@ namespace Qosmetics::Walls
         bool replaceFrameMaterial = false;
         bool replaceCoreMesh = false;
         bool replaceFrameMesh = false;
-        bool removeFakeGlow = false;
+        bool disableCore = false;
+        bool disableFrame = false;
+        bool disableFakeGlow = false;
         bool isLegacy = false;
         bool isDefault = true;
     };

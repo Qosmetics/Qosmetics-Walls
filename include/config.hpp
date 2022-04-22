@@ -5,7 +5,7 @@ namespace Qosmetics::Walls
 {
     struct Config
     {
-        std::string lastUsedDodger;
+        std::string lastUsedBox;
         bool forceFakeGlowOff = false;
         bool forceCoreOff = false;
         bool forceFrameOff = false;

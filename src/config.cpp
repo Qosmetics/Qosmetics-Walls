@@ -95,7 +95,7 @@ namespace Qosmetics::Walls
     void WallConfigRegistration::SaveConfig(rapidjson::Value& member, rapidjson::Document::AllocatorType& allocator) const
     {
         INFO("Saving config...");
-        SET_JSON_STRING(lastUsedDodger);
+        SET_JSON_STRING(lastUsedBox);
         SET_JSON_BOOL(forceFakeGlowOff);
         SET_JSON_BOOL(forceCoreOff);
         SET_JSON_BOOL(forceFrameOff);
@@ -107,6 +107,7 @@ namespace Qosmetics::Walls
     {
         bool foundEverything = true;
         INFO("Loading config...");
+        GET_JSON_STRING(lastUsedBox);
         GET_JSON_BOOL(forceFakeGlowOff);
         GET_JSON_BOOL(forceCoreOff);
         GET_JSON_BOOL(forceFrameOff);
@@ -125,13 +126,13 @@ namespace Qosmetics::Walls
         Qosmetics::Walls::PreviewViewController::justChangedProfile = true;
 
         auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
-        if (actual_config.lastUsedDodger == "" || actual_config.lastUsedDodger == "Default")
+        if (actual_config.lastUsedBox == "" || actual_config.lastUsedBox == "Default")
         {
             wallModelContainer->Default();
             return;
         }
 
-        std::string filePath = fmt::format("{}/{}.dodger", dodger_path, actual_config.lastUsedDodger);
+        std::string filePath = fmt::format("{}/{}.box", box_path, actual_config.lastUsedBox);
         if (!fileexists(filePath))
         {
             wallModelContainer->Default();
@@ -142,5 +143,5 @@ namespace Qosmetics::Walls
         wallModelContainer->LoadObject(manifest, nullptr);
     }
 
-    QOSMETICS_CONFIG_REGISTER(WallConfigRegistration, "dodgerConfig");
+    QOSMETICS_CONFIG_REGISTER(WallConfigRegistration, "boxConfig");
 }

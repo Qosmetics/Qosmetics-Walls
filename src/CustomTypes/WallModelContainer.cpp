@@ -61,11 +61,12 @@ namespace Qosmetics::Walls
 
     void WallModelContainer::Start()
     {
-        auto lastUsedDodger = Qosmetics::Walls::Config::get_config().lastUsedDodger;
-        if (lastUsedDodger == "" || lastUsedDodger == "Default")
+        auto lastUsedBox = Qosmetics::Walls::Config::get_config().lastUsedBox;
+        DEBUG("Last used box: {}", lastUsedBox);
+        if (lastUsedBox == "" || lastUsedBox == "Default")
             return;
 
-        std::string filePath = fmt::format("{}/{}.dodger", dodger_path, lastUsedDodger);
+        std::string filePath = fmt::format("{}/{}.box", box_path, lastUsedBox);
         if (!fileexists(filePath))
             return;
         currentManifest = Qosmetics::Core::Manifest<WallObjectConfig>(filePath);
@@ -121,15 +122,15 @@ namespace Qosmetics::Walls
         if (bundle)
             bundle->Unload(true);
 
-        DEBUG("Loading file {} from dodger {}", currentManifest.get_fileName(), currentManifest.get_filePath());
+        DEBUG("Loading file {} from box {}", currentManifest.get_fileName(), currentManifest.get_filePath());
         co_yield custom_types::Helpers::CoroutineHelper::New(Qosmetics::Core::BundleUtils::LoadBundleFromZipAsync(currentManifest.get_filePath(), currentManifest.get_fileName(), bundle));
 
         bool isLegacy = currentManifest.get_config().get_isLegacy();
-        DEBUG("Loading {}Dodger", isLegacy ? "legacy " : "");
-        co_yield custom_types::Helpers::CoroutineHelper::New(Qosmetics::Core::BundleUtils::LoadAssetFromBundleAsync<UnityEngine::GameObject*>(bundle, isLegacy ? "_CustomWall" : "_Dodger", currentWallObject));
+        DEBUG("Loading {}Box", isLegacy ? "legacy " : "");
+        co_yield custom_types::Helpers::CoroutineHelper::New(Qosmetics::Core::BundleUtils::LoadAssetFromBundleAsync<UnityEngine::GameObject*>(bundle, isLegacy ? "_CustomWall" : "_Box", currentWallObject));
 
         if (!currentWallObject)
-            ERROR("Failed to load dodger from bundle!");
+            ERROR("Failed to load box from bundle!");
         auto name = currentWallObject->get_name();
         currentWallObject = UnityEngine::Object::Instantiate(currentWallObject, get_transform());
 
