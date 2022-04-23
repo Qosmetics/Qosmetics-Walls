@@ -32,7 +32,9 @@ namespace Qosmetics::Walls
             auto castedObstacleController = il2cpp_utils::try_cast<GlobalNamespace::MirroredObstacleController>(obstacleController);
             if (castedObstacleController)
             {
-                colorManager = castedObstacleController.value()->dyn__followedObstacle()->dyn__colorManager();
+                auto obstacleController = castedObstacleController.value()->dyn__followedObstacle();
+                if (obstacleController)
+                    colorManager = obstacleController->dyn__colorManager();
             }
         }
 
