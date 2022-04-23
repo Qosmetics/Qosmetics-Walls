@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CustomTypes/BoxColorHandler.hpp"
-#include "GlobalNamespace/ObstacleController.hpp"
+#include "GlobalNamespace/ObstacleControllerBase.hpp"
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Material.hpp"
 #include "UnityEngine/Mesh.hpp"
@@ -11,7 +11,7 @@
 
 DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxHandler, UnityEngine::MonoBehaviour,
                       DECLARE_INSTANCE_FIELD(BoxColorHandler*, colorHandler);
-                      DECLARE_INSTANCE_FIELD(GlobalNamespace::ObstacleController*, obstacleController);
+                      DECLARE_INSTANCE_FIELD(GlobalNamespace::ObstacleControllerBase*, obstacleController);
 
                       DECLARE_INSTANCE_METHOD(void, Awake);
 

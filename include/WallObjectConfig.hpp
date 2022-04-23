@@ -66,6 +66,7 @@ namespace Qosmetics::Walls
             GET_BOOL(disableFrame);
             GET_BOOL(disableFakeGlow);
             GET_BOOL(isLegacy);
+            GET_BOOL(isMirrorable);
             isDefault = false;
         }
 
@@ -81,6 +82,7 @@ namespace Qosmetics::Walls
             ADD_BOOL(disableFrame);
             ADD_BOOL(disableFakeGlow);
             ADD_BOOL(isLegacy);
+            ADD_BOOL(isMirrorable);
             return val;
         }
 
@@ -93,6 +95,7 @@ namespace Qosmetics::Walls
         CONST_GETTER(disableFakeGlow);
         CONST_GETTER(isLegacy);
         CONST_GETTER(isDefault);
+        CONST_GETTER(isMirrorable)
 
     private:
         bool replaceCoreMaterial = false;
@@ -103,6 +106,7 @@ namespace Qosmetics::Walls
         bool disableFrame = false;
         bool disableFakeGlow = false;
         bool isLegacy = false;
+        bool isMirrorable = false;
         bool isDefault = true;
     };
 }

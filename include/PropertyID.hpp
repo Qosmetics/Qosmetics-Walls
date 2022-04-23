@@ -13,6 +13,8 @@
 
 namespace PropertyID
 {
+    PROPERTY_ID(_SizeParams);
+    PROPERTY_ID(_EdgeSize);
     PROPERTY_ID(_CustomColors);
     PROPERTY_ID(_Glow);
     PROPERTY_ID(_Bloom);

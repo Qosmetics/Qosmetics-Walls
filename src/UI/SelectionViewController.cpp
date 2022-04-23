@@ -59,14 +59,14 @@ namespace Qosmetics::Walls
 
     void SelectionViewController::ReloadDescriptorList()
     {
-        std::vector<std::string> boxs = {};
-        Qosmetics::Core::FileUtils::GetFilesInFolderPath("box", box_path, boxs);
+        std::vector<std::string> boxes = {};
+        Qosmetics::Core::FileUtils::GetFilesInFolderPath("box", box_path, boxes);
         auto tableView = reinterpret_cast<QuestUI::TableView*>(descriptorList->tableView);
         int scrolledRow = tableView->get_scrolledRow();
 
         auto& descriptorSet = descriptorList->objectDescriptors;
         int current = 0;
-        for (auto& box : boxs)
+        for (auto& box : boxes)
         {
             current++;
 
@@ -99,8 +99,8 @@ namespace Qosmetics::Walls
         // check each descriptor to see if it still exists on disk, if not it should be removed from the list
         for (auto it = descriptorSet.begin(); it != descriptorSet.end(); /* nothing */)
         {
-            auto itr = std::find(boxs.begin(), boxs.end(), Qosmetics::Core::FileUtils::GetFileName(it->get_filePath()));
-            if (itr == boxs.end())
+            auto itr = std::find(boxes.begin(), boxes.end(), Qosmetics::Core::FileUtils::GetFileName(it->get_filePath()));
+            if (itr == boxes.end())
                 it = descriptorSet.erase(it);
             else
                 it++;

@@ -1,14 +1,14 @@
 <resources>
-    <string name="QosmeticsBoxs:Preview:Default">Default Box (no preview)</string>
+    <string name="QosmeticsBoxes:Preview:Default">Default Box (no preview)</string>
     
-    <string name="QosmeticsBoxs:Settings:Settings">Box Settings</string>
-    <string name="QosmeticsBoxs:Settings:FakeGlowOff">Force Fake Glow Off</string>
-    <string name="QosmeticsBoxs:Settings:FakeGlowOffHoverHint">Whether to turn off the Fake Glow at all times</string>
-    <string name="QosmeticsBoxs:Settings:CoreOff">Force Core Off</string>
-    <string name="QosmeticsBoxs:Settings:CoreOffHoverHint">Whether to turn off the Wall Core at all times</string>
-    <string name="QosmeticsBoxs:Settings:FrameOff">Force Frame Off</string>
-    <string name="QosmeticsBoxs:Settings:FrameOffHoverHint">Whether to turn off the Wall Frame at all times</string>
-    <string name="QosmeticsBoxs:Settings:DisableReflections">Disable Reflections</string>
-    <string name="QosmeticsBoxs:Settings:DisableReflectionsHoverHint">Whether to make base game walls be reflected</string>
+    <string name="QosmeticsBoxes:Settings:Settings">Box Settings</string>
+    <string name="QosmeticsBoxes:Settings:FakeGlowOff">Force Fake Glow Off</string>
+    <string name="QosmeticsBoxes:Settings:FakeGlowOffHoverHint">Whether to turn off the Fake Glow at all times</string>
+    <string name="QosmeticsBoxes:Settings:CoreOff">Force Core Off</string>
+    <string name="QosmeticsBoxes:Settings:CoreOffHoverHint">Whether to turn off the Wall Core at all times</string>
+    <string name="QosmeticsBoxes:Settings:FrameOff">Force Frame Off</string>
+    <string name="QosmeticsBoxes:Settings:FrameOffHoverHint">Whether to turn off the Wall Frame at all times</string>
+    <string name="QosmeticsBoxes:Settings:DisableReflections">Disable Reflections</string>
+    <string name="QosmeticsBoxes:Settings:DisableReflectionsHoverHint">Whether to make base game walls be reflected</string>
 
 </resources>

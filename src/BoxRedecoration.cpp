@@ -14,14 +14,23 @@
 #include "GlobalNamespace/ColorScheme.hpp"
 #include "GlobalNamespace/ConditionalActivation.hpp"
 #include "GlobalNamespace/ConditionalMaterialSwitcher.hpp"
+#include "GlobalNamespace/FakeMirrorObjectsInstaller.hpp"
 #include "GlobalNamespace/GameplayCoreSceneSetupData.hpp"
 #include "GlobalNamespace/MaterialPropertyBlockController.hpp"
+#include "GlobalNamespace/MirroredObstacleController.hpp"
 #include "GlobalNamespace/ObstacleController.hpp"
 #include "UnityEngine/GameObject.hpp"
 #include "UnityEngine/Material.hpp"
 #include "UnityEngine/MeshFilter.hpp"
 #include "UnityEngine/MeshRenderer.hpp"
 #include "UnityEngine/Transform.hpp"
+
+#if __has_include("chroma/shared/ObstacleAPI.hpp")
+#include "chroma/shared/ObstacleAPI.hpp"
+#ifndef HAS_CHROMA
+#define HAS_CHROMA 1
+#endif
+#endif
 
 /*
     ObstaclePrefab
@@ -50,9 +59,9 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     auto obstacleFakeGlowT = hideWrapperT->Find(ConstStrings::ObstacleFakeGlow());
 
     auto boxParent = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxParent*>();
-
     auto boxHandler = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxHandler*>();
     boxParent->handler = boxHandler;
+    auto boxColorHandler = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
 
     auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
     auto& globalConfig = Qosmetics::Walls::Config::get_config();
@@ -65,14 +74,23 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     {
         DEBUG("There's a wall selected");
         auto& config = wallModelContainer->GetWallConfig();
-        auto boxColorHandler = obstaclePrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
-        boxColorHandler->obstacleController = obstaclePrefab;
 
         auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
         auto coreRenderer = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
 
         auto customCoreT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
         auto customFrameT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+
+#ifdef HAS_CHROMA
+        Chroma::ObstacleAPI::setObstacleColorable(true);
+
+        auto callbackOpt = Chroma::ObstacleAPI::getObstacleChangedColorCallbackSafe();
+        if (callbackOpt)
+        {
+            auto& callbackRef = callbackOpt.value().get();
+            callbackRef += &Qosmetics::Walls::BoxParent::Colorize;
+        }
+#endif
 
         if (config.get_disableFrame() || globalConfig.forceFrameOff) // frame needs to be off
         {
@@ -133,6 +151,9 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     else
     {
         DEBUG("no custom wall");
+#ifdef HAS_CHROMA
+        Chroma::ObstacleAPI::setObstacleColorable(false);
+#endif
         if (globalConfig.forceFrameOff) // frame needs to be off
         {
             frameFilter->set_mesh(nullptr);
@@ -145,4 +166,71 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     }
 
     return obstaclePrefab;
+}
+
+REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalNamespace::MirroredObstacleController*, GlobalNamespace::FakeMirrorObjectsInstaller*)
+{
+    if (Qosmetics::Walls::Disabling::GetAnyDisabling())
+        return mirroredObstacleControllerPrefab;
+
+    auto t = mirroredObstacleControllerPrefab->get_transform();
+
+    auto obstacleFrameT = t->Find(ConstStrings::ObstacleFrame());
+
+    auto boxParent = mirroredObstacleControllerPrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxParent*>();
+    auto boxHandler = mirroredObstacleControllerPrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxHandler*>();
+    boxParent->handler = boxHandler;
+    auto boxColorHandler = mirroredObstacleControllerPrefab->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
+
+    auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
+    auto& globalConfig = Qosmetics::Walls::Config::get_config();
+    auto& config = wallModelContainer->GetWallConfig();
+
+    auto frameFilter = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
+
+    if (wallModelContainer->currentWallObject && config.get_isMirrorable())
+    {
+        DEBUG("There's a wall selected");
+
+        auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
+
+        auto customFrameT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+
+        if (config.get_disableFrame() || globalConfig.forceFrameOff) // frame needs to be off
+        {
+            DEBUG("Disable frame");
+            frameFilter->set_mesh(nullptr);
+        }
+        else
+        {
+            DEBUG("keep frame");
+            // doing this lets us keep the frame on
+            auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
+            conditionalActivation->dyn__value()->set_value(true);
+            conditionalActivation->dyn__activateOnFalse() = false;
+
+            if (config.get_replaceFrameMesh())
+            {
+                DEBUG("Replace mesh");
+                frameFilter->set_mesh(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>()->get_sharedMesh());
+            }
+            if (config.get_replaceFrameMaterial())
+            {
+                // TODO: mirrorable properties setting (blending)
+                DEBUG("Replace frame material");
+                frameRenderer->SetMaterialArray(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+            }
+        }
+        auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
+        auto colorScheme = gameplayCoreSceneSetupData->dyn_colorScheme();
+
+        boxHandler->SetColor(colorScheme->get_obstaclesColor());
+    }
+    else
+    {
+        if (globalConfig.forceFrameOff) // frame needs to be off
+            frameFilter->set_mesh(nullptr);
+    }
+
+    return mirroredObstacleControllerPrefab;
 }

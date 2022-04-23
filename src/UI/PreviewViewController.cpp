@@ -12,8 +12,10 @@
 
 #include "UnityEngine/UI/LayoutElement.hpp"
 
+#include "ConstStrings.hpp"
 #include "HMUI/CurvedCanvasSettingsHelper.hpp"
 #include "HMUI/ImageView.hpp"
+#include "PropertyID.hpp"
 
 DEFINE_TYPE(Qosmetics::Walls, PreviewViewController);
 
@@ -95,7 +97,7 @@ namespace Qosmetics::Walls
         if (!currentPrefab)
         {
             DEBUG("No prefab found, must be default!");
-            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsBoxs:Preview:Default"));
+            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsBoxes:Preview:Default"));
             return;
         }
 
@@ -107,6 +109,40 @@ namespace Qosmetics::Walls
         auto& descriptor = noteModelContainer->GetDescriptor();
         auto name = descriptor.get_name();
         SetTitleText(name);
+
+        auto t = currentPrefab->get_transform();
+        auto core = t->Find(ConstStrings::Core());
+        auto frame = t->Find(ConstStrings::Frame());
+
+        if (core)
+            core->get_gameObject()->SetActive(!(globalConfig.forceCoreOff || config.get_disableCore()));
+        if (frame)
+            frame->get_gameObject()->SetActive(!(globalConfig.forceFrameOff || config.get_disableFrame()));
+
+        int childCount = t->get_childCount();
+        for (int i = 0; i < childCount; i++)
+        {
+            auto child = t->GetChild(i);
+            if (child != core && child != frame)
+                child->get_gameObject()->SetActive(false);
+        }
+
+        t->set_localScale(Sombrero::FastVector3(1.5f, 1.0f, 0.5f) / 0.03f);
+
+        auto renderers = currentPrefab->GetComponentsInChildren<UnityEngine::Renderer*>(true);
+        auto scale = t->get_lossyScale() * 0.5f;
+        UnityEngine::Vector4 sizeParams = UnityEngine::Vector4(scale.x, scale.y, scale.z, 0.05f);
+
+        int rendererCount = renderers->Length();
+        for (auto renderer : renderers)
+        {
+            auto materials = renderer->GetMaterialArray();
+            for (auto material : materials)
+            {
+                if (material->HasProperty(PropertyID::_SizeParams()))
+                    material->SetVector(PropertyID::_SizeParams(), sizeParams);
+            }
+        }
 
         // TODO: implement proper positioning, size n stuff
     }
@@ -120,10 +156,9 @@ namespace Qosmetics::Walls
             currentPrefab->SetActive(true);
             auto t = currentPrefab->get_transform();
             auto s = get_transform()->get_lossyScale();
-            DEBUG("LossyScale: {}, {}, {}", s.x, s.y, s.z);
             t->set_localScale(Sombrero::FastVector3::one() / 0.03f);
-            t->set_localPosition(Sombrero::FastVector3(-30.0f, 2.5f, -85.0f));
-            t->set_localEulerAngles(Sombrero::FastVector3(0.0f, -30.0f, 0.0f));
+            t->set_localPosition(Sombrero::FastVector3(-30.0f, 2.5f, -70.0f));
+            t->set_localEulerAngles(Sombrero::FastVector3(0.0f, 60.0f, 0.0f));
             DEBUG("Instantiated and inited new prefab!");
         }
         else

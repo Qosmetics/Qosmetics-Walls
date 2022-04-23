@@ -1,5 +1,7 @@
 #include "CustomTypes/BoxHandler.hpp"
 
+#include "GlobalNamespace/MirroredObstacleController.hpp"
+#include "GlobalNamespace/ObstacleController.hpp"
 #include "GlobalNamespace/ParametricBoxFrameController.hpp"
 #include "GlobalNamespace/StretchableObstacle.hpp"
 
@@ -11,7 +13,7 @@ namespace Qosmetics::Walls
     void BoxHandler::Awake()
     {
         colorHandler = GetComponentInChildren<BoxColorHandler*>();
-        obstacleController = GetComponent<GlobalNamespace::ObstacleController*>();
+        obstacleController = GetComponent<GlobalNamespace::ObstacleControllerBase*>();
     }
 
     void BoxHandler::SetColor(const Sombrero::FastColor& color)
@@ -21,7 +23,7 @@ namespace Qosmetics::Walls
 
         if (obstacleController)
         {
-            auto stretchableObstacle = obstacleController->dyn__stretchableObstacle();
+            auto stretchableObstacle = CRASH_UNLESS(il2cpp_utils::GetFieldValue<GlobalNamespace::StretchableObstacle*>(obstacleController, "_stretchableObstacle"));
             auto frameController = stretchableObstacle->dyn__obstacleFrame();
             stretchableObstacle->SetSizeAndColor(frameController->dyn_width(), frameController->dyn_height(), frameController->dyn_length(), color);
         }

@@ -12,7 +12,7 @@
 
 #include "questui/shared/BeatSaberUI.hpp"
 
-QOSMETICS_FLOWCOORDINATOR_REGISTER(Boxs, Qosmetics::Walls::BoxFlowCoordinator*)
+QOSMETICS_FLOWCOORDINATOR_REGISTER(Boxes, Qosmetics::Walls::BoxFlowCoordinator*)
 {
     auto inactive_data = WallIcon_png::getData();
     auto inactive = QuestUI::BeatSaberUI::VectorToSprite(std::vector<uint8_t>(inactive_data, inactive_data + WallIcon_png::getLength()));
