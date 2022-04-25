@@ -18,6 +18,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, WallModelContainer, UnityEngine::MonoBeh
                       DECLARE_INSTANCE_FIELD(UnityEngine::GameObject*, currentWallObject);
 
                       DECLARE_CTOR(ctor);
+                      DECLARE_SIMPLE_DTOR();
 
                       public
                       :
