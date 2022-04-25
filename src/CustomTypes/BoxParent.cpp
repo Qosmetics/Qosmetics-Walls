@@ -2,7 +2,6 @@
 
 #include "GlobalNamespace/MirroredObstacleController.hpp"
 #include "GlobalNamespace/ObstacleController.hpp"
-#include <map>
 
 DEFINE_TYPE(Qosmetics::Walls, BoxParent);
 
@@ -15,7 +14,7 @@ DEFINE_TYPE(Qosmetics::Walls, BoxParent);
 
 namespace Qosmetics::Walls
 {
-    std::map<GlobalNamespace::ObstacleControllerBase*, BoxParent*> obstacleControllerToBoxParentMap = {};
+    std::map<GlobalNamespace::ObstacleControllerBase*, BoxParent*> BoxParent::obstacleControllerToBoxParentMap = {};
 
     void BoxParent::Awake()
     {
@@ -39,14 +38,26 @@ namespace Qosmetics::Walls
         }
 
         std::function<void(GlobalNamespace::ObstacleControllerBase*)> fun = std::bind(&BoxParent::ObstacleDidInit, this, std::placeholders::_1);
-        didInitDelegate = il2cpp_utils::MakeDelegate<::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*>(classof(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*), fun);
-        obstacleController->add_didInitEvent(didInitDelegate);
+        // didInitDelegate = il2cpp_utils::MakeDelegate<::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*>(classof(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*), fun);
+        // obstacleController->add_didInitEvent(didInitDelegate);
     }
 
     void BoxParent::OnDestroy()
     {
         obstacleControllerToBoxParentMap.erase(obstacleController);
-        obstacleController->remove_didInitEvent(didInitDelegate);
+        /*
+        auto event = obstacleController->dyn_didInitEvent();
+        auto& delegates = event->dyn_delegates();
+
+        std::vector<System::Delegate*> vec{delegates.Length()};
+        for (auto& e : vec)
+        {
+            if (e != didInitDelegate)
+                vec.push_back(e);
+        }
+
+        delegates = il2cpp_utils::vectorToArray(vec);
+        */
     }
 
     void BoxParent::ObstacleDidInit(GlobalNamespace::ObstacleControllerBase* obstacleController)

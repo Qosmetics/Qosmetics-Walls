@@ -7,6 +7,7 @@
 #include "UnityEngine/MonoBehaviour.hpp"
 #include "custom-types/shared/macros.hpp"
 #include "sombrero/shared/FastColor.hpp"
+#include <map>
 
 DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxParent, UnityEngine::MonoBehaviour,
                       DECLARE_INSTANCE_FIELD(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*, didInitDelegate);
@@ -21,6 +22,8 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxParent, UnityEngine::MonoBehaviour,
                       public
                       :
 
+                      static std::map<GlobalNamespace::ObstacleControllerBase*, BoxParent*>
+                          obstacleControllerToBoxParentMap;
                       static void Colorize(GlobalNamespace::ObstacleControllerBase* obstacleController, const Sombrero::FastColor& color);
                       void ColorizeSpecific(const Sombrero::FastColor& color);
 
