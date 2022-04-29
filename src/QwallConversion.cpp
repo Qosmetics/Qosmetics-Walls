@@ -152,8 +152,7 @@ namespace Qosmetics::Walls::QwallConversion
             zip_close(zip);
             bundle->Unload(true);
 
-            // TODO: make this actually delete again
-            // deletefile(oldPath);
+            deletefile(oldPath);
             co_yield nullptr;
         }
 
