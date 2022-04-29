@@ -143,8 +143,6 @@ namespace Qosmetics::Walls
                     material->SetVector(PropertyID::_SizeParams(), sizeParams);
             }
         }
-
-        // TODO: implement proper positioning, size n stuff
     }
     void PreviewViewController::InstantiatePrefab()
     {
