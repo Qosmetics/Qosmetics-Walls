@@ -6,6 +6,7 @@
 #include "CustomTypes/BoxParent.hpp"
 #include "CustomTypes/WallModelContainer.hpp"
 #include "Disabling.hpp"
+#include "PropertyID.hpp"
 #include "config.hpp"
 #include "qosmetics-core/shared/RedecorationRegister.hpp"
 
@@ -187,8 +188,11 @@ REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalName
     auto& config = wallModelContainer->GetWallConfig();
 
     auto frameFilter = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
-
-    if (wallModelContainer->currentWallObject && config.get_isMirrorable())
+    if (globalConfig.disableReflections)
+    {
+        frameFilter->set_mesh(nullptr);
+    }
+    else if (wallModelContainer->currentWallObject && config.get_isMirrorable())
     {
         DEBUG("There's a wall selected");
 
@@ -216,9 +220,30 @@ REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalName
             }
             if (config.get_replaceFrameMaterial())
             {
-                // TODO: mirrorable properties setting (blending)
                 DEBUG("Replace frame material");
-                frameRenderer->SetMaterialArray(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+                auto materials = customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetSharedMaterialArray();
+                for (auto material : materials)
+                {
+                    material->set_renderQueue(1951);
+                    if (material->HasProperty(PropertyID::_Alpha()))
+                        material->SetFloat(PropertyID::_Alpha(), 0.05f);
+                    if (material->HasProperty(PropertyID::_StencilRefID()))
+                        material->SetFloat(PropertyID::_StencilRefID(), 1);
+                    if (material->HasProperty(PropertyID::_StencilComp()))
+                        material->SetFloat(PropertyID::_StencilComp(), 3);
+                    if (material->HasProperty(PropertyID::_StencilOp()))
+                        material->SetFloat(PropertyID::_StencilOp(), 0);
+
+                    if (material->HasProperty(PropertyID::_BlendDstFactor()))
+                        material->SetFloat(PropertyID::_BlendDstFactor(), 10);
+                    if (material->HasProperty(PropertyID::_BlendDstFactorA()))
+                        material->SetFloat(PropertyID::_BlendDstFactorA(), 0);
+                    if (material->HasProperty(PropertyID::_BlendSrcFactor()))
+                        material->SetFloat(PropertyID::_BlendSrcFactor(), 5);
+                    if (material->HasProperty(PropertyID::_BlendSrcFactorA()))
+                        material->SetFloat(PropertyID::_BlendSrcFactorA(), 0);
+                }
+                frameRenderer->SetMaterialArray(materials);
             }
         }
         auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
