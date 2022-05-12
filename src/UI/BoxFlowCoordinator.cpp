@@ -8,6 +8,8 @@
 #include "HMUI/ViewController_AnimationDirection.hpp"
 #include "HMUI/ViewController_AnimationType.hpp"
 
+#include "qosmetics-core/shared/Utils/DateUtils.hpp"
+#include "qosmetics-core/shared/Utils/RainbowUtils.hpp"
 #include "qosmetics-core/shared/Utils/UIUtils.hpp"
 DEFINE_TYPE(Qosmetics::Walls, BoxFlowCoordinator);
 
@@ -27,7 +29,8 @@ namespace Qosmetics::Walls
             ProvideInitialViewControllers(selectionViewController, settingsViewController, previewViewController, nullptr, nullptr);
 
             set_showBackButton(true);
-            SetTitle("Box", HMUI::ViewController::AnimationType::In);
+
+            SetTitle(Qosmetics::Core::DateUtils::isMonth(6) ? Qosmetics::Core::RainbowUtils::gayify("Box") : "Box", HMUI::ViewController::AnimationType::In);
         }
 
         HMUI::TitleViewController* titleView = Object::FindObjectOfType<HMUI::TitleViewController*>();
