@@ -149,7 +149,7 @@ namespace Qosmetics::Walls
         auto wallModelContainer = WallModelContainer::get_instance();
         if (wallModelContainer->currentWallObject)
         {
-            DEBUG("Found a new saber object, instantiating it! name: {}", wallModelContainer->currentWallObject->get_name());
+            DEBUG("Found a new wall object, instantiating it! name: {}", wallModelContainer->currentWallObject->get_name());
             currentPrefab = UnityEngine::Object::Instantiate(wallModelContainer->currentWallObject, get_transform());
             currentPrefab->SetActive(true);
             auto t = currentPrefab->get_transform();
