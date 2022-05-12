@@ -71,6 +71,14 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     auto fakeGlowFilter = obstacleFakeGlowT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
     auto coreFilter = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
 
+    auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
+    conditionalActivation->dyn__value()->set_value(true);
+    conditionalActivation->dyn__activateOnFalse() = false;
+
+    auto conditionalActivation2 = obstacleFakeGlowT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
+    conditionalActivation2->dyn__value()->set_value(true);
+    conditionalActivation2->dyn__activateOnFalse() = false;
+
     if (wallModelContainer->currentWallObject)
     {
         DEBUG("There's a wall selected");
@@ -103,9 +111,6 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
         {
             DEBUG("keep frame");
             // doing this lets us keep the frame on
-            auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-            conditionalActivation->dyn__value()->set_value(true);
-            conditionalActivation->dyn__activateOnFalse() = false;
 
             if (config.get_disableFakeGlow() || globalConfig.forceFakeGlowOff)
             {
@@ -157,13 +162,20 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
 #endif
         if (globalConfig.forceFrameOff) // frame needs to be off
         {
+            DEBUG("Frame Off");
             frameFilter->set_mesh(nullptr);
             fakeGlowFilter->set_mesh(nullptr);
         }
         else if (globalConfig.forceFakeGlowOff) // just fake glow off
+        {
+            DEBUG("Fake Glow Off");
             fakeGlowFilter->set_mesh(nullptr);
+        }
         if (globalConfig.forceCoreOff) // core needs to be off
+        {
+            DEBUG("Core Off");
             coreFilter->set_mesh(nullptr);
+        }
     }
 
     return obstaclePrefab;
