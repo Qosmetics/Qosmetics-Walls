@@ -98,6 +98,7 @@ namespace Qosmetics::Walls
             return false;
         if (descriptor.get_filePath() == currentManifest.get_filePath())
             return false;
+        isLoading = true;
         INFO("Loading Wall Object {}", descriptor.get_name());
         currentManifest = Qosmetics::Core::Manifest<WallObjectConfig>(descriptor.get_filePath());
         StartCoroutine(custom_types::Helpers::CoroutineHelper::New(LoadBundleRoutine(std::move(onFinished))));
@@ -150,10 +151,10 @@ namespace Qosmetics::Walls
         DEBUG("Adding handlers to object");
         AddHandlers(currentWallObject);
 
-        isLoading = false;
         if (onFinished)
             onFinished(this);
 
+        isLoading = false;
         co_return;
     }
 
