@@ -36,7 +36,7 @@ namespace Qosmetics::Walls
     {
         if (firstActivation)
         {
-            title = Qosmetics::Core::UIUtils::AddHeader(get_transform(), "", Sombrero::FastColor::red());
+            title = Qosmetics::Core::UIUtils::AddHeader(get_transform(), "", Sombrero::FastColor::magenta());
             reinterpret_cast<UnityEngine::RectTransform*>(title->get_transform()->get_parent()->get_parent())->set_anchoredPosition({0.0f, 30.0f});
             auto backgroundLayout = CreateVerticalLayoutGroup(this);
             auto horizontalBackgroundLayout = CreateHorizontalLayoutGroup(backgroundLayout);

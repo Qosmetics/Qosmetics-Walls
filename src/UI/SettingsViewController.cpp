@@ -55,10 +55,10 @@ namespace Qosmetics::Walls
             auto localization = Diglett::Localization::get_instance();
             if (Qosmetics::Core::DateUtils::isMonth(6))
             {
-                Qosmetics::Core::UIUtils::AddHeader(get_transform(), Qosmetics::Core::RainbowUtils::gayify(static_cast<std::string>(localization->get("QosmeticsBoxes:Settings:Settings"))), Sombrero::FastColor::red());
+                Qosmetics::Core::UIUtils::AddHeader(get_transform(), Qosmetics::Core::RainbowUtils::gayify(static_cast<std::string>(localization->get("QosmeticsBoxes:Settings:Settings"))), Sombrero::FastColor::magenta());
             }
             else
-                Qosmetics::Core::UIUtils::AddHeader(get_transform(), localization->get("QosmeticsBoxes:Settings:Settings"), Sombrero::FastColor::red());
+                Qosmetics::Core::UIUtils::AddHeader(get_transform(), localization->get("QosmeticsBoxes:Settings:Settings"), Sombrero::FastColor::magenta());
 
             auto container = CreateScrollableSettingsContainer(this);
 

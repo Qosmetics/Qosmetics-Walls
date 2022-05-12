@@ -34,7 +34,7 @@ namespace Qosmetics::Walls
         }
 
         HMUI::TitleViewController* titleView = Object::FindObjectOfType<HMUI::TitleViewController*>();
-        Qosmetics::Core::UIUtils::SetTitleColor(titleView, UnityEngine::Color::get_red());
+        Qosmetics::Core::UIUtils::SetTitleColor(titleView, UnityEngine::Color::get_magenta());
     }
 
     void BoxFlowCoordinator::BackButtonWasPressed(HMUI::ViewController* topViewController)
