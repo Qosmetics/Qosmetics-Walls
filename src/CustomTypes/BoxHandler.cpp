@@ -24,8 +24,8 @@ namespace Qosmetics::Walls
         if (obstacleController)
         {
             auto stretchableObstacle = CRASH_UNLESS(il2cpp_utils::GetFieldValue<GlobalNamespace::StretchableObstacle*>(obstacleController, "_stretchableObstacle"));
-            auto frameController = stretchableObstacle->dyn__obstacleFrame();
-            stretchableObstacle->SetSizeAndColor(frameController->dyn_width(), frameController->dyn_height(), frameController->dyn_length(), color);
+            auto frameController = stretchableObstacle->obstacleFrame;
+            stretchableObstacle->SetSizeAndColor(frameController->width, frameController->height, frameController->length, color);
         }
     }
 

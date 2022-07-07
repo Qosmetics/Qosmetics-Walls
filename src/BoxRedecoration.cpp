@@ -72,12 +72,12 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     auto coreFilter = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
 
     auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-    conditionalActivation->dyn__value()->set_value(true);
-    conditionalActivation->dyn__activateOnFalse() = false;
+    conditionalActivation->value->set_value(true);
+    conditionalActivation->activateOnFalse = false;
 
     auto conditionalActivation2 = obstacleFakeGlowT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-    conditionalActivation2->dyn__value()->set_value(true);
-    conditionalActivation2->dyn__activateOnFalse() = false;
+    conditionalActivation2->value->set_value(true);
+    conditionalActivation2->activateOnFalse = false;
 
     if (wallModelContainer->currentWallObject)
     {
@@ -150,7 +150,7 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
             }
         }
         auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
-        auto colorScheme = gameplayCoreSceneSetupData->dyn_colorScheme();
+        auto colorScheme = gameplayCoreSceneSetupData->colorScheme;
 
         boxHandler->SetColor(colorScheme->get_obstaclesColor());
     }
@@ -222,8 +222,8 @@ REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalName
             DEBUG("keep frame");
             // doing this lets us keep the frame on
             auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-            conditionalActivation->dyn__value()->set_value(true);
-            conditionalActivation->dyn__activateOnFalse() = false;
+            conditionalActivation->value->set_value(true);
+            conditionalActivation->activateOnFalse = false;
 
             if (config.get_replaceFrameMesh())
             {
@@ -259,7 +259,7 @@ REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalName
             }
         }
         auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
-        auto colorScheme = gameplayCoreSceneSetupData->dyn_colorScheme();
+        auto colorScheme = gameplayCoreSceneSetupData->colorScheme;
 
         boxHandler->SetColor(colorScheme->get_obstaclesColor());
     }

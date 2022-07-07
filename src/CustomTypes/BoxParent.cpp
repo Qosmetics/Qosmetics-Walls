@@ -24,16 +24,16 @@ namespace Qosmetics::Walls
         auto castedObstacleController = il2cpp_utils::try_cast<GlobalNamespace::ObstacleController>(obstacleController);
         if (castedObstacleController)
         {
-            colorManager = castedObstacleController.value()->dyn__colorManager();
+            colorManager = castedObstacleController.value()->colorManager;
         }
         else
         {
             auto castedObstacleController = il2cpp_utils::try_cast<GlobalNamespace::MirroredObstacleController>(obstacleController);
             if (castedObstacleController)
             {
-                auto obstacleController = castedObstacleController.value()->dyn__followedObstacle();
+                auto obstacleController = castedObstacleController.value()->followedObstacle;
                 if (obstacleController)
-                    colorManager = obstacleController->dyn__colorManager();
+                    colorManager = obstacleController->colorManager;
             }
         }
 
@@ -46,8 +46,8 @@ namespace Qosmetics::Walls
     {
         obstacleControllerToBoxParentMap.erase(obstacleController);
         /*
-        auto event = obstacleController->dyn_didInitEvent();
-        auto& delegates = event->dyn_delegates();
+        auto event = obstacleController->didInitEvent;
+        auto& delegates = event->delegates;
 
         std::vector<System::Delegate*> vec{delegates.Length()};
         for (auto& e : vec)
