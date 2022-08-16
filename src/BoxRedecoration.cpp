@@ -72,12 +72,12 @@ REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleCon
     auto coreFilter = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
 
     auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-    conditionalActivation->value->set_value(true);
-    conditionalActivation->activateOnFalse = false;
+    // conditionalActivation->value->set_value(true);
+    conditionalActivation->activateOnFalse = !conditionalActivation->activateOnFalse;
 
     auto conditionalActivation2 = obstacleFakeGlowT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-    conditionalActivation2->value->set_value(true);
-    conditionalActivation2->activateOnFalse = false;
+    // conditionalActivation2->value->set_value(true);
+    conditionalActivation2->activateOnFalse = !conditionalActivation2->activateOnFalse;
 
     if (wallModelContainer->currentWallObject)
     {

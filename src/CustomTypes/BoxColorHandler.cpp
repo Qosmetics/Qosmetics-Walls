@@ -25,7 +25,7 @@ namespace Qosmetics::Walls
         {
             auto materials = renderer->get_materials();
             for (auto material : materials)
-                if (MaterialUtils::ShouldCC(material))
+                if (MaterialUtils::ShouldCC(material) && material->HasProperty(PropertyID::_Color()))
                     customColorMaterialsVec.push_back(material);
         }
         DEBUG("Found {} custom colors materials", customColorMaterialsVec.size());
@@ -43,11 +43,7 @@ namespace Qosmetics::Walls
         lastColor = color;
 
         for (auto* mat : customColorMaterials)
-        {
-            if (mat->HasProperty(PropertyID::_Color()))
-                mat->SetColor(PropertyID::_Color(), color);
-        }
-        FetchCCMaterials();
+            mat->SetColor(PropertyID::_Color(), color);
     }
 
 }

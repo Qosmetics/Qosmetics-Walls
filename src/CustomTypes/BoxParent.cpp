@@ -38,26 +38,11 @@ namespace Qosmetics::Walls
         }
 
         std::function<void(GlobalNamespace::ObstacleControllerBase*)> fun = std::bind(&BoxParent::ObstacleDidInit, this, std::placeholders::_1);
-        // didInitDelegate = il2cpp_utils::MakeDelegate<::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*>(classof(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*), fun);
-        // obstacleController->add_didInitEvent(didInitDelegate);
     }
 
     void BoxParent::OnDestroy()
     {
         obstacleControllerToBoxParentMap.erase(obstacleController);
-        /*
-        auto event = obstacleController->didInitEvent;
-        auto& delegates = event->delegates;
-
-        std::vector<System::Delegate*> vec{delegates.Length()};
-        for (auto& e : vec)
-        {
-            if (e != didInitDelegate)
-                vec.push_back(e);
-        }
-
-        delegates = il2cpp_utils::vectorToArray(vec);
-        */
     }
 
     void BoxParent::ObstacleDidInit(GlobalNamespace::ObstacleControllerBase* obstacleController)
