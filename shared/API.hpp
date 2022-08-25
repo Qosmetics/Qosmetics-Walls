@@ -12,6 +12,16 @@
 #endif
 #endif
 
+#if __has_include("UnityEngine/Material.hpp")
+#include "UnityEngine/Material.hpp"
+#else 
+namespace UnityEngine {
+    typedef Il2CppObject Material;
+    typedef Il2CppObject Mesh;
+    typedef Il2CppObject GameObject;
+}
+#endif
+
 #define QOSMETICS_WALLS "qosmetics-walls"
 
 namespace Qosmetics::Walls::API
