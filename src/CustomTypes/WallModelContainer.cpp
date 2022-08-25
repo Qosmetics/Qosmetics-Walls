@@ -192,16 +192,12 @@ namespace Qosmetics::Walls
 
     void WallModelContainer::OnGameRestart()
     {
-        if (currentWallObject)
-        {
+        if (currentWallObject && currentWallObject->m_CachedPtr.m_value)
             Object::DestroyImmediate(currentWallObject);
-            currentWallObject = nullptr;
-        }
-        if (bundle)
-        {
+        currentWallObject = nullptr;
+        if (bundle && bundle->m_CachedPtr.m_value)
             bundle->Unload(true);
-            bundle = nullptr;
-        }
+        bundle = nullptr;
 
         instance = nullptr;
         UnityEngine::Object::DestroyImmediate(this->get_gameObject());
