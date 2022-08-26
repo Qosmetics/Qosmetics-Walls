@@ -4,11 +4,11 @@
   "info": {
     "name": "Qosmetics Boxes",
     "id": "qosmetics-walls",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "url": "https://github.com/Qosmetics/Qosmetics-Walls",
     "additionalData": {
-      "overrideSoName": "libqosmetics-walls.so",
-      "headersOnly": true
+      "headersOnly": true,
+      "overrideSoName": "libqosmetics-walls.so"
     }
   },
   "dependencies": [
