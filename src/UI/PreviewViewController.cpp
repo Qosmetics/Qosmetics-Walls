@@ -26,6 +26,13 @@ using namespace QuestUI::BeatSaberUI;
 namespace Qosmetics::Walls
 {
     bool PreviewViewController::justChangedProfile = false;
+
+    void PreviewViewController::Inject(WallModelContainer* wallModelContainer, GlobalNamespace::PlayerDataModel* playerDataModel)
+    {
+        this->wallModelContainer = wallModelContainer;
+        this->playerDataModel = playerDataModel;
+    }
+
     void PreviewViewController::DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
     {
         if (currentPrefab)
@@ -110,11 +117,10 @@ namespace Qosmetics::Walls
         }
 
         DEBUG("Getting variables");
-        auto noteModelContainer = WallModelContainer::get_instance();
-        auto config = noteModelContainer->GetWallConfig();
+        auto config = wallModelContainer->GetWallConfig();
         auto& globalConfig = Config::get_config();
 
-        auto& descriptor = noteModelContainer->GetDescriptor();
+        auto& descriptor = wallModelContainer->GetDescriptor();
         auto name = descriptor.get_name();
         SetTitleText(name);
 
@@ -141,6 +147,7 @@ namespace Qosmetics::Walls
         auto scale = t->get_lossyScale() * 0.5f;
         UnityEngine::Vector4 sizeParams = UnityEngine::Vector4(scale.x, scale.y, scale.z, 0.05f);
 
+        // TODO: set colors from selected colorscheme
         int rendererCount = renderers->Length();
         for (auto renderer : renderers)
         {
@@ -154,7 +161,6 @@ namespace Qosmetics::Walls
     }
     void PreviewViewController::InstantiatePrefab()
     {
-        auto wallModelContainer = WallModelContainer::get_instance();
         if (wallModelContainer->currentWallObject)
         {
             DEBUG("Found a new wall object, instantiating it! name: {}", wallModelContainer->currentWallObject->get_name());

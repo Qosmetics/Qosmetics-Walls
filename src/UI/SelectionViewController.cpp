@@ -24,6 +24,12 @@ using namespace QuestUI::BeatSaberUI;
 
 namespace Qosmetics::Walls
 {
+    void SelectionViewController::Inject(PreviewViewController* previewViewController, WallModelContainer* wallModelContainer)
+    {
+        this->previewViewController = previewViewController;
+        this->wallModelContainer = wallModelContainer;
+    }
+
     void SelectionViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
         if (firstActivation)
@@ -112,8 +118,6 @@ namespace Qosmetics::Walls
 
     void SelectionViewController::OnSelectDefault()
     {
-        auto wallModelContainer = WallModelContainer::get_instance();
-
         // if we do not PROPERLY switch to default, don't clear the preview
         if (wallModelContainer->Default())
         {
@@ -134,7 +138,7 @@ namespace Qosmetics::Walls
                 return;
             }
 
-            if (WallModelContainer::get_instance()->LoadObject(descriptor, std::bind(&SelectionViewController::OnObjectLoadFinished, this)))
+            if (wallModelContainer->LoadObject(descriptor, std::bind(&SelectionViewController::OnObjectLoadFinished, this)))
             {
                 previewViewController->ClearPrefab();
                 previewViewController->ShowLoading(true);
@@ -160,8 +164,6 @@ namespace Qosmetics::Walls
     void SelectionViewController::OnObjectLoadFinished()
     {
         // something to do after we changed the object, like update preview
-        auto wallModelContainer = WallModelContainer::get_instance();
-
         Qosmetics::Walls::Config::get_config().lastUsedBox = wallModelContainer->GetWallConfig().get_isDefault() ? "" : Qosmetics::Core::FileUtils::GetFileName(wallModelContainer->GetDescriptor().get_filePath(), true);
         Qosmetics::Core::Config::SaveConfig();
         previewViewController->UpdatePreview(true);
