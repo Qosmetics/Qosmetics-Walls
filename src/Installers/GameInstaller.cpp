@@ -81,7 +81,6 @@ namespace Qosmetics::Walls
         boxParent->handler = boxHandler;
         auto boxColorHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
 
-        auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
         auto& globalConfig = Qosmetics::Walls::Config::get_config();
 
         auto frameFilter = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
@@ -95,17 +94,16 @@ namespace Qosmetics::Walls
         auto conditionalActivation2 = obstacleFakeGlowT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
         // conditionalActivation2->value->set_value(true);
         conditionalActivation2->activateOnFalse = !conditionalActivation2->activateOnFalse;
-
-        if (wallModelContainer->currentWallObject)
+        if (_wallModelContainer->currentWallObject)
         {
             DEBUG("There's a wall selected");
-            auto& config = wallModelContainer->GetWallConfig();
+            auto& config = _wallModelContainer->GetWallConfig();
 
             auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
             auto coreRenderer = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
 
-            auto customCoreT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
-            auto customFrameT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+            auto customCoreT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
+            auto customFrameT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
 
 #ifdef HAS_CHROMA
             auto callbackOpt = Chroma::ObstacleAPI::getObstacleChangedColorCallbackSafe();
@@ -164,9 +162,7 @@ namespace Qosmetics::Walls
                     coreRenderer->SetMaterialArray(customCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
                 }
             }
-            auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
-            auto colorScheme = gameplayCoreSceneSetupData->colorScheme;
-
+            auto colorScheme = _gameplayCoreSceneSetupData->colorScheme;
             boxHandler->SetColor(colorScheme->get_obstaclesColor());
         }
         else
@@ -195,6 +191,7 @@ namespace Qosmetics::Walls
 
     GlobalNamespace::MirroredObstacleController* GameInstaller::DecorateMirroredWall(GlobalNamespace::MirroredObstacleController* original)
     {
+        DEBUG("original: {}", fmt::ptr(original));
         auto t = original->get_transform();
 
         auto obstacleFrameT = t->Find(ConstStrings::ObstacleFrame());
@@ -204,22 +201,21 @@ namespace Qosmetics::Walls
         boxParent->handler = boxHandler;
         auto boxColorHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
 
-        auto wallModelContainer = Qosmetics::Walls::WallModelContainer::get_instance();
         auto& globalConfig = Qosmetics::Walls::Config::get_config();
-        auto& config = wallModelContainer->GetWallConfig();
+        auto& config = _wallModelContainer->GetWallConfig();
 
         auto frameFilter = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
         if (globalConfig.disableReflections)
         {
             frameFilter->set_mesh(nullptr);
         }
-        else if (wallModelContainer->currentWallObject && config.get_isMirrorable())
+        else if (_wallModelContainer->currentWallObject && config.get_isMirrorable())
         {
             DEBUG("There's a wall selected");
 
             auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
 
-            auto customFrameT = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+            auto customFrameT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
 
             if (config.get_disableFrame() || globalConfig.forceFrameOff) // frame needs to be off
             {
@@ -267,8 +263,7 @@ namespace Qosmetics::Walls
                     frameRenderer->SetMaterialArray(materials);
                 }
             }
-            auto gameplayCoreSceneSetupData = container->TryResolve<GlobalNamespace::GameplayCoreSceneSetupData*>();
-            auto colorScheme = gameplayCoreSceneSetupData->colorScheme;
+            auto colorScheme = _gameplayCoreSceneSetupData->colorScheme;
 
             boxHandler->SetColor(colorScheme->get_obstaclesColor());
         }
