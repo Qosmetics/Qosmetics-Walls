@@ -47,6 +47,11 @@ namespace Qosmetics::Walls
 {
     bool SettingsViewController::justChangedProfile = false;
 
+    void SettingsViewController::Inject(PreviewViewController* previewViewController)
+    {
+        this->previewViewController = previewViewController;
+    }
+
     void SettingsViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
         auto& globalConfig = Config::get_config();

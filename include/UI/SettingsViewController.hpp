@@ -21,6 +21,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, SettingsViewController, HMUI::ViewContro
                       DECLARE_INSTANCE_FIELD(UnityEngine::UI::Toggle*, forceFrameOffToggle);
                       DECLARE_INSTANCE_FIELD(UnityEngine::UI::Toggle*, disableReflectionsToggle);
 
+                      DECLARE_INJECT_METHOD(void, Inject, PreviewViewController* previewViewController);
                       DECLARE_OVERRIDE_METHOD_MATCH(void, DidActivate, &HMUI::ViewController::DidActivate, bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling);
                       DECLARE_OVERRIDE_METHOD_MATCH(void, DidDeactivate, &HMUI::ViewController::DidDeactivate, bool removedFromHierarchy, bool screenSystemDisabling);
 
