@@ -23,7 +23,7 @@ namespace Qosmetics::Walls
         static auto baseKlass = classof(Qosmetics::Core::QosmeticsBaseFlowCoordinator*);
         custom_types::InvokeBaseCtor(baseKlass, this);
 
-        name = "Cyoobs";
+        name = "Boxes";
         inActiveSprite = ArrayToSprite(IncludedAssets::WallIcon_png);
         activeSprite = ArrayToSprite(IncludedAssets::WallIconSelected_png);
     }
