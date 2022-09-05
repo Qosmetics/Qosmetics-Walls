@@ -19,6 +19,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxParent, UnityEngine::MonoBehaviour,
                       DECLARE_INSTANCE_METHOD(void, OnDestroy);
                       DECLARE_INSTANCE_METHOD(void, ObstacleDidInit, GlobalNamespace::ObstacleControllerBase* obstacleController);
 
+                      DECLARE_DEFAULT_CTOR();
                       public
                       :
 

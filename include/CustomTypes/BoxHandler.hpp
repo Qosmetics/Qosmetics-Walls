@@ -14,6 +14,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxHandler, UnityEngine::MonoBehaviour,
                       DECLARE_INSTANCE_FIELD(GlobalNamespace::ObstacleControllerBase*, obstacleController);
 
                       DECLARE_INSTANCE_METHOD(void, Awake);
+                      DECLARE_DEFAULT_CTOR();
 
                       public
                       :

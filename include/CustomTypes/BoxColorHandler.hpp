@@ -12,6 +12,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxColorHandler, UnityEngine::MonoBehavi
 
                       DECLARE_INSTANCE_METHOD(void, Awake);
                       DECLARE_INSTANCE_METHOD(void, FetchCCMaterials);
+                      DECLARE_DEFAULT_CTOR();
 
                       public
                       :
