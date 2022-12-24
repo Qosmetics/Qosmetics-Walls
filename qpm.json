@@ -4,7 +4,7 @@
   "info": {
     "name": "Qosmetics Boxes",
     "id": "qosmetics-walls",
-    "version": "0.0.1",
+    "version": "0.1.2",
     "url": "https://github.com/Qosmetics/Qosmetics-Walls",
     "additionalData": {
       "headersOnly": true,
