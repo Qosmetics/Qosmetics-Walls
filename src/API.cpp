@@ -13,13 +13,19 @@
 #include "UnityEngine/Mesh.hpp"
 #include "UnityEngine/MeshFilter.hpp"
 #include "UnityEngine/MeshRenderer.hpp"
+#include "UnityEngine/Resources.hpp"
 #include "UnityEngine/Transform.hpp"
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreturn-type-c-linkage"
 
-#define WALLMODELCONTAINER Qosmetics::Walls::WallModelContainer::get_instance()
+#define WALLMODELCONTAINER getModelContainer()
 #define GET_WALLMODELCONTAINER() auto wallModelContainer = WALLMODELCONTAINER
+
+auto getModelContainer()
+{
+    return UnityEngine::Resources::FindObjectsOfTypeAll<Qosmetics::Walls::WallModelContainer*>().FirstOrDefault();
+}
 
 EXPOSE_API(GetActiveDescriptor, Qosmetics::Core::Descriptor)
 {

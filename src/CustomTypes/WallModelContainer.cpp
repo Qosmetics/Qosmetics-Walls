@@ -42,11 +42,7 @@ namespace Qosmetics::Walls
     WallModelContainer* WallModelContainer::instance = nullptr;
     WallModelContainer* WallModelContainer::get_instance()
     {
-        if (instance)
-            return instance;
-        auto go = UnityEngine::GameObject::New_ctor(StringW(___TypeRegistration::get()->name()));
-        UnityEngine::Object::DontDestroyOnLoad(go);
-        return go->AddComponent<WallModelContainer*>();
+        return instance;
     }
 
     void WallModelContainer::ctor()
@@ -162,17 +158,7 @@ namespace Qosmetics::Walls
     {
         if (isLoading)
             return false;
-        if (currentWallObject)
-        {
-            Object::DestroyImmediate(currentWallObject);
-            currentWallObject = nullptr;
-        }
-        if (bundle)
-        {
-            bundle->Unload(true);
-            bundle = nullptr;
-        }
-
+        Unload();
         currentManifest = decltype(currentManifest)();
         return true;
     }
@@ -180,17 +166,10 @@ namespace Qosmetics::Walls
     void WallModelContainer::OnDestroy()
     {
         instance = nullptr;
-        UnloadBundle();
+        Unload();
     }
 
-    void WallModelContainer::UnloadBundle()
-    {
-        if (bundle)
-            bundle->Unload(false);
-        bundle = nullptr;
-    }
-
-    void WallModelContainer::OnGameRestart()
+    void WallModelContainer::Unload()
     {
         if (currentWallObject && currentWallObject->m_CachedPtr.m_value)
             Object::DestroyImmediate(currentWallObject);
@@ -198,8 +177,5 @@ namespace Qosmetics::Walls
         if (bundle && bundle->m_CachedPtr.m_value)
             bundle->Unload(true);
         bundle = nullptr;
-
-        instance = nullptr;
-        UnityEngine::Object::DestroyImmediate(this->get_gameObject());
     }
 }

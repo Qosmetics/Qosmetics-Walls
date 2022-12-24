@@ -24,9 +24,6 @@ if ($release.IsPresent) {
     $buildType = "RelWithDebInfo"
 }
 
-cd build
-& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="$buildType" ../
-& cmake --build .
-$ExitCode = $LastExitCode
-cd ..
-exit $ExitCode
+& cmake -G "Ninja" -DCMAKE_BUILD_TYPE="$buildType" -B build/
+& cmake --build ./build
+exit $LastExitCode

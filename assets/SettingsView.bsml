@@ -1,0 +1,37 @@
+<bg xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/RedBrumbler/Quest-BSML-Docs/gh-pages/schema.xsd'>
+    <!-- Header -->
+    <stack background="title-gradient" pref-width='90' pref-height='10' vertical-fit="PreferredSize"
+        horizontal-fit="PreferredSize"
+        background-color0="#FF00FFFF" background-color1="#FF00FF00" ignore-layout="true"
+        anchor-pos-y="45">
+        <macro.if value='!gay'>
+            <text text='Box Settings' align="Center" font-size="8" />
+        </macro.if>
+        <macro.if value='gay'>
+            <text text='Box Settings' align="Center" font-size="8" />
+        </macro.if>
+    </stack>
+    <scrollable-settings-container size-delta-y="0">
+        <toggle-setting
+            text='Force Fake Glow Off'
+            value='forceFakeGlowOff'
+            apply-on-change='true'
+            hover-hint="Whether to turn off the Fake Glow at all times" />
+        <toggle-setting
+            text='Force Core Off'
+            value='forceCoreOff'
+            apply-on-change='true'
+            hover-hint="Whether to turn off the Wall Core at all times" />
+        <toggle-setting
+            text='Force Frame Off'
+            value='forceFrameOff'
+            apply-on-change='true'
+            hover-hint="Whether to turn off the Wall Frame at all times" />
+        <toggle-setting
+            text='Disable Reflections'
+            value='disableReflections'
+            apply-on-change='true'
+            hover-hint="Whether to make base game walls be reflected" />
+    </scrollable-settings-container>
+</bg>

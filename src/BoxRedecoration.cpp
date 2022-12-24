@@ -8,7 +8,6 @@
 #include "Disabling.hpp"
 #include "PropertyID.hpp"
 #include "config.hpp"
-#include "qosmetics-core/shared/RedecorationRegister.hpp"
 
 #include "GlobalNamespace/BeatmapObjectsInstaller.hpp"
 #include "GlobalNamespace/BoolSO.hpp"
@@ -43,6 +42,7 @@
             L DepthWrite
 */
 
+/*
 REDECORATION_REGISTRATION(obstaclePrefab, 10, true, GlobalNamespace::ObstacleController*, GlobalNamespace::BeatmapObjectsInstaller*)
 {
     if (Qosmetics::Walls::Disabling::GetAnyDisabling())
@@ -271,3 +271,4 @@ REDECORATION_REGISTRATION(mirroredObstacleControllerPrefab, 10, true, GlobalName
 
     return mirroredObstacleControllerPrefab;
 }
+*/

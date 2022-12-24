@@ -2,37 +2,43 @@
 #include "CustomTypes/WallModelContainer.hpp"
 #include "assets.hpp"
 #include "config.hpp"
-#include "diglett/shared/Localization.hpp"
-#include "diglett/shared/Util.hpp"
 #include "logging.hpp"
 #include "qosmetics-core/shared/ConfigRegister.hpp"
 #include "qosmetics-core/shared/Utils/FileUtils.hpp"
 #include "qosmetics-core/shared/Utils/ZipUtils.hpp"
-#include "questui/shared/BeatSaberUI.hpp"
-#include "questui/shared/CustomTypes/Components/List/QuestUITableView.hpp"
 #include "static-defines.hpp"
 
 #include "HMUI/TableView.hpp"
 #include "HMUI/TableView_ScrollPositionType.hpp"
 
+#include "bsml/shared/BSML.hpp"
+#include "bsml/shared/Helpers/utilities.hpp"
+
 #include "QwallConversion.hpp"
+#include "System/Collections/Generic/HashSet_1.hpp"
 #include <algorithm>
 
 DEFINE_TYPE(Qosmetics::Walls, SelectionViewController);
 
-using namespace QuestUI::BeatSaberUI;
-
 namespace Qosmetics::Walls
 {
+    void SelectionViewController::Inject(PreviewViewController* previewViewController, WallModelContainer* wallModelContainer)
+    {
+        this->previewViewController = previewViewController;
+        this->wallModelContainer = wallModelContainer;
+    }
+
     void SelectionViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
         if (firstActivation)
         {
+            BSML::parse_and_construct(IncludedAssets::SelectionView_bsml, get_transform(), this);
+            /*
             auto vertical = CreateVerticalLayoutGroup(get_transform());
             auto buttonHorizontal = CreateHorizontalLayoutGroup(vertical->get_transform());
 
             auto localization = Diglett::Localization::get_instance();
-            auto defaultObjectBtn = CreateUIButton(buttonHorizontal->get_transform(), localization->get("QosmeticsCore:QosmeticsTable:Default"), std::bind(&SelectionViewController::OnSelectDefault, this));
+            auto defaultObjectBtn = CreateUIButton(buttonHorizontal->get_transform(), localization->get("QosmeticsCore:QosmeticsTable:Default"), std::bind(&SelectionViewController::Default, this));
             auto refreshBtn = CreateUIButton(buttonHorizontal->get_transform(), localization->get("QosmeticsCore:QosmeticsTable:Refresh"), [this]()
                                              { QwallConversion::ConvertOldQwalls(std::bind(&SelectionViewController::RefreshAfterWallConversion, this)); });
 
@@ -42,8 +48,32 @@ namespace Qosmetics::Walls
             descriptorList->onSelect = std::bind(reinterpret_cast<void (SelectionViewController::*)(HMUI::TableCell*)>(&SelectionViewController::OnSelectDescriptor), this, std::placeholders::_1);
             descriptorList->onDelete = std::bind(reinterpret_cast<void (SelectionViewController::*)(HMUI::TableCell*)>(&SelectionViewController::OnDeleteCell), this, std::placeholders::_1);
             descriptorList->defaultSprite = ArrayToSprite(IncludedAssets::PlaceholderIcon_png);
+            */
         }
 
+        Refresh();
+    }
+
+    void SelectionViewController::PostParse()
+    {
+        deletionConfirmationModal = Qosmetics::Core::DeletionConfirmationModal::Create(get_transform());
+
+        auto tableView = descriptorListTableData->tableView;
+        auto go = descriptorListTableData->get_gameObject();
+        Object::DestroyImmediate(descriptorListTableData);
+        descriptorListTableData = nullptr;
+        descriptorList = go->AddComponent<Qosmetics::Core::QosmeticObjectTableData*>();
+        descriptorList->tableView = tableView;
+        tableView->SetDataSource(reinterpret_cast<HMUI::TableView::IDataSource*>(descriptorList), false);
+
+        descriptorList->deletionConfirmationModal = deletionConfirmationModal;
+        descriptorList->onSelect = std::bind(reinterpret_cast<void (SelectionViewController::*)(HMUI::TableCell*)>(&SelectionViewController::OnSelectDescriptor), this, std::placeholders::_1);
+        descriptorList->onDelete = std::bind(reinterpret_cast<void (SelectionViewController::*)(HMUI::TableCell*)>(&SelectionViewController::OnDeleteCell), this, std::placeholders::_1);
+        descriptorList->defaultSprite = BSML::Utilities::LoadSpriteRaw(IncludedAssets::PlaceholderIcon_png);
+    }
+
+    void SelectionViewController::Refresh()
+    {
         QwallConversion::ConvertOldQwalls(std::bind(&SelectionViewController::RefreshAfterWallConversion, this));
     }
 
@@ -56,18 +86,28 @@ namespace Qosmetics::Walls
         ReloadDescriptorList();
     }
 
+    int SelectionViewController::GetSelectedCellIdx()
+    {
+        if (!descriptorList || !descriptorList->m_CachedPtr.m_value)
+            return -1;
+        auto tableView = descriptorList->tableView;
+        auto enumerator = tableView->selectedCellIdxs->GetEnumerator();
+        int result = -1;
+        if (enumerator.MoveNext())
+            result = enumerator.get_Current();
+        enumerator.Dispose();
+        return result;
+    }
+
     void SelectionViewController::ReloadDescriptorList()
     {
         std::vector<std::string> boxes = {};
         Qosmetics::Core::FileUtils::GetFilesInFolderPath("box", box_path, boxes);
-        auto tableView = reinterpret_cast<QuestUI::TableView*>(descriptorList->tableView);
-        int scrolledRow = tableView->get_scrolledRow();
 
+        int row = GetSelectedCellIdx();
         auto& descriptorSet = descriptorList->objectDescriptors;
-        int current = 0;
         for (auto& box : boxes)
         {
-            current++;
 
             std::string filePath = fmt::format("{}/{}", box_path, box);
             auto orig = std::find_if(descriptorSet.begin(), descriptorSet.end(), [filePath](auto& d)
@@ -105,21 +145,20 @@ namespace Qosmetics::Walls
                 it++;
         }
 
+        auto tableView = descriptorList->tableView;
         tableView->ReloadData();
         tableView->RefreshCells(true, true);
+        tableView->ScrollToCellWithIdx(std::clamp(row, 0, (int)descriptorSet.size() - 1), HMUI::TableView::ScrollPositionType::Center, true);
         tableView->ClearSelection();
     }
 
-    void SelectionViewController::OnSelectDefault()
+    void SelectionViewController::Default()
     {
-        auto wallModelContainer = WallModelContainer::get_instance();
-
         // if we do not PROPERLY switch to default, don't clear the preview
         if (wallModelContainer->Default())
         {
             OnObjectLoadFinished();
-            auto tableView = reinterpret_cast<QuestUI::TableView*>(descriptorList->tableView);
-            tableView->ClearSelection();
+            descriptorList->tableView->ClearSelection();
         }
     }
 
@@ -134,7 +173,7 @@ namespace Qosmetics::Walls
                 return;
             }
 
-            if (WallModelContainer::get_instance()->LoadObject(descriptor, std::bind(&SelectionViewController::OnObjectLoadFinished, this)))
+            if (wallModelContainer->LoadObject(descriptor, std::bind(&SelectionViewController::OnObjectLoadFinished, this)))
             {
                 previewViewController->ClearPrefab();
                 previewViewController->ShowLoading(true);
@@ -151,7 +190,7 @@ namespace Qosmetics::Walls
         }
 
         if (descriptor.get_filePath() == WallModelContainer::get_instance()->GetDescriptor().get_filePath())
-            OnSelectDefault();
+            Default();
 
         deletefile(descriptor.get_filePath());
         ReloadDescriptorList();
@@ -160,8 +199,6 @@ namespace Qosmetics::Walls
     void SelectionViewController::OnObjectLoadFinished()
     {
         // something to do after we changed the object, like update preview
-        auto wallModelContainer = WallModelContainer::get_instance();
-
         Qosmetics::Walls::Config::get_config().lastUsedBox = wallModelContainer->GetWallConfig().get_isDefault() ? "" : Qosmetics::Core::FileUtils::GetFileName(wallModelContainer->GetDescriptor().get_filePath(), true);
         Qosmetics::Core::Config::SaveConfig();
         previewViewController->UpdatePreview(true);
