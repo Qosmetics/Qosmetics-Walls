@@ -9,11 +9,13 @@
 #include "sombrero/shared/FastColor.hpp"
 #include <map>
 
+#include "private_field.hpp"
+
 DECLARE_CLASS_CODEGEN(Qosmetics::Walls, BoxParent, UnityEngine::MonoBehaviour,
-                      DECLARE_INSTANCE_FIELD(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*, didInitDelegate);
-                      DECLARE_INSTANCE_FIELD(GlobalNamespace::ObstacleControllerBase*, obstacleController);
-                      DECLARE_INSTANCE_FIELD(GlobalNamespace::ColorManager*, colorManager);
-                      DECLARE_INSTANCE_FIELD(BoxHandler*, handler);
+                      DECLARE_INSTANCE_PRIVATE_FIELD(::System::Action_1<::GlobalNamespace::ObstacleControllerBase*>*, didInitDelegate);
+                      DECLARE_INSTANCE_PRIVATE_FIELD(GlobalNamespace::ObstacleControllerBase*, obstacleController);
+                      DECLARE_INSTANCE_PRIVATE_FIELD(GlobalNamespace::ColorManager*, colorManager);
+                      DECLARE_INSTANCE_PRIVATE_FIELD(BoxHandler*, handler);
 
                       DECLARE_INSTANCE_METHOD(void, Awake);
                       DECLARE_INSTANCE_METHOD(void, OnDestroy);

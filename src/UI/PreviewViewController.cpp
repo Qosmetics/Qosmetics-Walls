@@ -1,17 +1,16 @@
 #include "UI/PreviewViewController.hpp"
 #include "CustomTypes/WallModelContainer.hpp"
+#include "assets.hpp"
 #include "config.hpp"
-#include "diglett/shared/Localization.hpp"
-#include "diglett/shared/Util.hpp"
 #include "logging.hpp"
 #include "qosmetics-core/shared/Utils/DateUtils.hpp"
 #include "qosmetics-core/shared/Utils/RainbowUtils.hpp"
 #include "qosmetics-core/shared/Utils/UIUtils.hpp"
-#include "questui/shared/BeatSaberUI.hpp"
-#include "questui/shared/CustomTypes/Components/Backgroundable.hpp"
 #include "sombrero/shared/FastColor.hpp"
 #include "sombrero/shared/FastVector3.hpp"
 
+#include "UnityEngine/Material.hpp"
+#include "UnityEngine/Renderer.hpp"
 #include "UnityEngine/UI/LayoutElement.hpp"
 
 #include "ConstStrings.hpp"
@@ -19,9 +18,10 @@
 #include "HMUI/ImageView.hpp"
 #include "PropertyID.hpp"
 
-DEFINE_TYPE(Qosmetics::Walls, PreviewViewController);
+#include "bsml/shared/BSML.hpp"
+#include "bsml/shared/BSML/Components/Backgroundable.hpp"
 
-using namespace QuestUI::BeatSaberUI;
+DEFINE_TYPE(Qosmetics::Walls, PreviewViewController);
 
 namespace Qosmetics::Walls
 {
@@ -39,22 +39,20 @@ namespace Qosmetics::Walls
             currentPrefab->SetActive(false);
     }
 
+    bool PreviewViewController::get_gay()
+    {
+        return Qosmetics::Core::DateUtils::isMonth(6);
+    }
+
     void PreviewViewController::DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
     {
         if (firstActivation)
         {
-            title = Qosmetics::Core::UIUtils::AddHeader(get_transform(), "", Sombrero::FastColor::magenta());
-            reinterpret_cast<UnityEngine::RectTransform*>(title->get_transform()->get_parent()->get_parent())->set_anchoredPosition({0.0f, 30.0f});
-            auto backgroundLayout = CreateVerticalLayoutGroup(this);
-            auto horizontalBackgroundLayout = CreateHorizontalLayoutGroup(backgroundLayout);
-            auto layoutElem = horizontalBackgroundLayout->get_gameObject()->GetComponent<UnityEngine::UI::LayoutElement*>();
-            layoutElem->set_preferredWidth(75.0f);
-            layoutElem->set_preferredHeight(50.0f);
-
-            auto bg = horizontalBackgroundLayout->get_gameObject()->AddComponent<QuestUI::Backgroundable*>();
-            bg->ApplyBackgroundWithAlpha("title-gradient", 1.0f);
-
-            auto imageView = bg->get_gameObject()->GetComponent<HMUI::ImageView*>();
+            auto parser = BSML::parse_and_construct(IncludedAssets::PreviewView_bsml, get_transform(), this);
+            auto params = parser->parserParams.get();
+            auto objectBG = params->GetObjectsWithTag("objectBG").at(0)->GetComponent<BSML::Backgroundable*>();
+            auto imageView = objectBG->background;
+            imageView->skew = 0;
             imageView->set_gradient(true);
             imageView->gradientDirection = 1;
             imageView->set_color(Sombrero::FastColor::white());
@@ -65,7 +63,6 @@ namespace Qosmetics::Walls
             imageView->set_color1(color);
             imageView->curvedCanvasSettingsHelper->Reset();
 
-            loadingIndicator = Qosmetics::Core::UIUtils::CreateLoadingIndicator(get_transform());
             ShowLoading(true);
             UpdatePreview(true);
         }
@@ -82,6 +79,8 @@ namespace Qosmetics::Walls
 
     void PreviewViewController::SetTitleText(StringW text)
     {
+        if (!(title && title->m_CachedPtr.m_value))
+            return;
         if (Qosmetics::Core::DateUtils::isMonth(6))
         {
             text = "<i>" + Qosmetics::Core::RainbowUtils::gayify(static_cast<std::string>(text)) + "</i>";
@@ -93,11 +92,12 @@ namespace Qosmetics::Walls
 
     void PreviewViewController::ShowLoading(bool isLoading)
     {
-        loadingIndicator->SetActive(isLoading);
+        if (!(loadingIndicator && loadingIndicator->m_CachedPtr.m_value))
+            return;
+
+        loadingIndicator->get_gameObject()->SetActive(isLoading);
         if (isLoading)
-        {
-            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsCore:Misc:Loading") + u"...");
-        }
+            SetTitleText("Loading...");
     }
     void PreviewViewController::UpdatePreview(bool reinstantiate)
     {
@@ -112,7 +112,7 @@ namespace Qosmetics::Walls
         if (!currentPrefab)
         {
             DEBUG("No prefab found, must be default!");
-            SetTitleText(Diglett::Localization::get_instance()->get("QosmeticsBoxes:Preview:Default"));
+            SetTitleText("Default Box (No preview)");
             return;
         }
 

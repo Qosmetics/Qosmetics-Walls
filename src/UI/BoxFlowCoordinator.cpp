@@ -1,5 +1,4 @@
 #include "UI/BoxFlowCoordinator.hpp"
-#include "questui/shared/BeatSaberUI.hpp"
 
 #include "HMUI/TitleViewController.hpp"
 #include "HMUI/ViewController_AnimationDirection.hpp"
@@ -12,9 +11,9 @@
 #include "assets.hpp"
 #include "logging.hpp"
 
-DEFINE_TYPE(Qosmetics::Walls, BoxFlowCoordinator);
+#include "bsml/shared/Helpers/utilities.hpp"
 
-using namespace QuestUI::BeatSaberUI;
+DEFINE_TYPE(Qosmetics::Walls, BoxFlowCoordinator);
 
 namespace Qosmetics::Walls
 {
@@ -24,8 +23,8 @@ namespace Qosmetics::Walls
         custom_types::InvokeBaseCtor(baseKlass, this);
 
         name = "Boxes";
-        inActiveSprite = ArrayToSprite(IncludedAssets::WallIcon_png);
-        activeSprite = ArrayToSprite(IncludedAssets::WallIconSelected_png);
+        inActiveSprite = BSML::Utilities::LoadSpriteRaw(IncludedAssets::WallIcon_png);
+        activeSprite = BSML::Utilities::LoadSpriteRaw(IncludedAssets::WallIconSelected_png);
     }
 
     void BoxFlowCoordinator::Inject(PreviewViewController* previewViewController, SelectionViewController* selectionViewController, SettingsViewController* settingsViewController)
