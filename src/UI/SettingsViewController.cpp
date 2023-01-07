@@ -64,10 +64,8 @@ namespace Qosmetics::Walls
         }
     }
 
-    bool SettingsViewController::get_gay()
-    {
-        return Qosmetics::Core::DateUtils::isMonth(6);
-    }
+    StringW SettingsViewController::get_gaydient() { return Qosmetics::Core::RainbowUtils::randomGradient(); }
+    bool SettingsViewController::get_gay() { return Qosmetics::Core::DateUtils::isMonth(6); }
 
     bool SettingsViewController::get_forceFakeGlowOff() { return Config::get_config().forceFakeGlowOff; }
     void SettingsViewController::set_forceFakeGlowOff(bool value)
