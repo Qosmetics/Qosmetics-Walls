@@ -24,6 +24,7 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, PreviewViewController, HMUI::ViewControl
                       DECLARE_INSTANCE_PRIVATE_FIELD(HMUI::ImageView*, loadingIndicator);
                       DECLARE_INSTANCE_PRIVATE_FIELD(UnityEngine::GameObject*, currentPrefab);
                       DECLARE_INSTANCE_METHOD(void, SetTitleText, StringW text);
+                      DECLARE_INSTANCE_METHOD(StringW, get_gaydient);
                       DECLARE_INSTANCE_METHOD(bool, get_gay);
 
                       DECLARE_INJECT_METHOD(void, Inject, WallModelContainer* wallModelContainer, GlobalNamespace::PlayerDataModel* playerDataModel);
