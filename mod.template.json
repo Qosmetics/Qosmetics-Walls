@@ -8,12 +8,7 @@
     "packageVersion": "1.27.0_3631150051",
     "coverImage": "cover.png",
     "description": "Qosmetics module that adds Box capabilities",
-    "dependencies": [
-        {
-            "version": "^2.1.2",
-            "id": "qosmetics-core"
-        }
-    ],
+    "dependencies": [],
     "modFiles": [],
     "libraryFiles": [],
     "fileCopies": []
