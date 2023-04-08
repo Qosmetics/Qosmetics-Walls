@@ -9,7 +9,11 @@
       "url": "https://github.com/Qosmetics/Qosmetics-Walls",
       "additionalData": {
         "headersOnly": true,
-        "overrideSoName": "libqosmetics-walls.so"
+        "soLink": "https://github.com/Qosmetics/Qosmetics-Walls/releases/download/v0.1.4/libqosmetics-walls.so",
+        "debugSoLink": "https://github.com/Qosmetics/Qosmetics-Walls/releases/download/v0.1.4/debug_libqosmetics-walls.so",
+        "overrideSoName": "libqosmetics-walls.so",
+        "modLink": "https://github.com/Qosmetics/Qosmetics-Walls/releases/download/v0.1.4/QosmeticsBoxes.qmod",
+        "branchName": "version-v0.1.4"
       }
     },
     "dependencies": [
@@ -103,9 +107,6 @@
     ],
     "workspace": {
       "scripts": {
-        "clean": [
-          "pwsh ./scripts/build.ps1 -clean"
-        ],
         "log": [
           "pwsh ./scripts/log.ps1"
         ],
@@ -114,11 +115,14 @@
           "qpm-rust qmod build",
           "pwsh ./scripts/createqmod.ps1 QosmeticsBoxes -clean"
         ],
-        "build": [
-          "pwsh ./scripts/build.ps1"
+        "clean": [
+          "pwsh ./scripts/build.ps1 -clean"
         ],
         "copy": [
           "pwsh ./scripts/copy.ps1"
+        ],
+        "build": [
+          "pwsh ./scripts/build.ps1"
         ]
       }
     }
