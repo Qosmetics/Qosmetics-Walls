@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.bsml": "xml",
+        "*.qmod": "zip",
         "iosfwd": "cpp",
         "__config": "cpp",
         "__nullptr": "cpp",
@@ -118,8 +120,29 @@
         "__memory": "cpp",
         "format": "cpp",
         "source_location": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "__std_stream": "cpp"
     },
     "editor.formatOnSave": true,
-    "todo-tree.tree.scanMode": "workspace"
+    "todo-tree.tree.scanMode": "workspace",
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#d42bd4",
+        "activityBar.background": "#d42bd4",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#4f4f10",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#d42bd4",
+        "statusBar.background": "#aa22aa",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#d42bd4",
+        "statusBarItem.remoteBackground": "#aa22aa",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#aa22aa",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#aa22aa99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#aa22aa"
 }
