@@ -82,7 +82,8 @@
       "id": "chroma",
       "versionRange": "^2.8.0",
       "additionalData": {
-        "private": true
+        "private": true,
+        "includeQmod": false
       }
     },
     {
