@@ -4,7 +4,7 @@
   "info": {
     "name": "Qosmetics Boxes",
     "id": "qosmetics-walls",
-    "version": "0.0.1",
+    "version": "0.1.4",
     "url": "https://github.com/Qosmetics/Qosmetics-Walls",
     "additionalData": {
       "headersOnly": true,
@@ -102,14 +102,8 @@
   ],
   "workspace": {
     "scripts": {
-      "build": [
-        "pwsh ./scripts/build.ps1"
-      ],
       "clean": [
         "pwsh ./scripts/build.ps1 -clean"
-      ],
-      "copy": [
-        "pwsh ./scripts/copy.ps1"
       ],
       "log": [
         "pwsh ./scripts/log.ps1"
@@ -118,8 +112,13 @@
         "pwsh ./scripts/build.ps1 -clean",
         "qpm-rust qmod build",
         "pwsh ./scripts/createqmod.ps1 QosmeticsBoxes -clean"
+      ],
+      "build": [
+        "pwsh ./scripts/build.ps1"
+      ],
+      "copy": [
+        "pwsh ./scripts/copy.ps1"
       ]
     }
-  },
-  "additionalData": {}
+  }
 }
