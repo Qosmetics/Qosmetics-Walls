@@ -9,14 +9,12 @@
 #include "qosmetics-core/shared/Data/Descriptor.hpp"
 #include "qosmetics-core/shared/Data/Manifest.hpp"
 
-#include "private_field.hpp"
-
 DECLARE_CLASS_CODEGEN(Qosmetics::Walls, WallModelContainer, UnityEngine::MonoBehaviour,
                       DECLARE_INSTANCE_METHOD(void, Start);
                       DECLARE_INSTANCE_METHOD(void, OnDestroy);
-                      DECLARE_INSTANCE_PRIVATE_FIELD(UnityEngine::AssetBundle*, bundle);
-                      DECLARE_INSTANCE_PRIVATE_FIELD(bool, isLoading);
-                      DECLARE_INSTANCE_PRIVATE_FIELD(UnityEngine::GameObject*, currentWallObject);
+                      DECLARE_INSTANCE_FIELD_PRIVATE(UnityEngine::AssetBundle*, bundle);
+                      DECLARE_INSTANCE_FIELD_PRIVATE(bool, isLoading);
+                      DECLARE_INSTANCE_FIELD_PRIVATE(UnityEngine::GameObject*, currentWallObject);
 
                       DECLARE_CTOR(ctor);
                       DECLARE_SIMPLE_DTOR();
@@ -32,6 +30,9 @@ DECLARE_CLASS_CODEGEN(Qosmetics::Walls, WallModelContainer, UnityEngine::MonoBeh
                       const WallObjectConfig& GetWallConfig();
                       const Qosmetics::Core::Descriptor& GetDescriptor();
                       bool Default();
+
+                      __declspec(property(get = get_CurrentWallObject)) UnityEngine::GameObject * CurrentWallObject;
+                      UnityEngine::GameObject * get_CurrentWallObject() const;
 
                       private
                       :

@@ -28,7 +28,7 @@ namespace Qosmetics::Walls::MaterialUtils
     {
         if (!object)
             return;
-        ArrayW<UnityEngine::Renderer*> renderers = object->GetComponentsInChildren<UnityEngine::Renderer*>(true);
+        auto renderers = object->GetComponentsInChildren<UnityEngine::Renderer*>(true);
 
         // all shader variant stuff is stripped so resolve icall
         static auto createFunc = reinterpret_cast<function_ptr_t<void, Il2CppObject*>>(il2cpp_functions::resolve_icall("UnityEngine.ShaderVariantCollection::Internal_Create"));
@@ -40,10 +40,10 @@ namespace Qosmetics::Walls::MaterialUtils
         ArrayW<Il2CppString*> stringArr = il2cpp_utils::vectorToArray(temp);
         for (auto renderer : renderers)
         {
-            ArrayW<UnityEngine::Material*> materials = renderer->get_materials();
+            auto materials = renderer->materials;
             for (auto material : materials)
             {
-                addFunc(obj, material->get_shader(), 0, stringArr);
+                addFunc(obj, material->shader, 0, stringArr);
             }
         }
         warmupFunc(obj);

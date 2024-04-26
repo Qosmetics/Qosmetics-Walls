@@ -13,11 +13,6 @@
 
 DEFINE_TYPE(Qosmetics::Walls, SettingsViewController);
 
-namespace QuestUI::BeatSaberUI
-{
-    HMUI::SimpleTextDropdown* CreateDropdownInternal(UnityEngine::Transform* parent, StringW dropdownName, int selectedIndex, List<StringW>* values, std::function<void(HMUI::SimpleTextDropdown*, int)> onValueChange);
-}
-
 #define TOGGLE(name, key)                                                              \
     name##Toggle = CreateToggle(containerT, localization->get(key), globalConfig.name, \
                                 [&](auto v)                                            \
@@ -52,7 +47,7 @@ namespace Qosmetics::Walls
     {
         if (firstActivation)
         {
-            BSML::parse_and_construct(IncludedAssets::SettingsView_bsml, get_transform(), this);
+            BSML::parse_and_construct(Assets::Views::SettingsView_bsml, get_transform(), this);
         }
         else if (justChangedProfile)
         {

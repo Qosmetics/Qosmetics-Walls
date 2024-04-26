@@ -23,6 +23,14 @@
 
 DEFINE_TYPE(Qosmetics::Walls, PreviewViewController);
 
+static UnityEngine::Vector3 operator*(UnityEngine::Vector3 vec, float v)
+{
+    return {
+        vec.x * v,
+        vec.y * v,
+        vec.z * v};
+}
+
 namespace Qosmetics::Walls
 {
     bool PreviewViewController::justChangedProfile = false;
@@ -46,20 +54,20 @@ namespace Qosmetics::Walls
     {
         if (firstActivation)
         {
-            auto parser = BSML::parse_and_construct(IncludedAssets::PreviewView_bsml, get_transform(), this);
+            auto parser = BSML::parse_and_construct(Assets::Views::PreviewView_bsml, get_transform(), this);
             auto params = parser->parserParams.get();
             auto objectBG = params->GetObjectsWithTag("objectBG").at(0)->GetComponent<BSML::Backgroundable*>();
             auto imageView = objectBG->background;
-            imageView->skew = 0;
+            imageView->_skew = 0;
             imageView->set_gradient(true);
-            imageView->gradientDirection = 1;
+            imageView->_gradientDirection = 1;
             imageView->set_color(Sombrero::FastColor::white());
             auto color = Sombrero::FastColor::get_black();
             color.a = 0.3f;
             imageView->set_color0(color);
             color.a = 0.7f;
             imageView->set_color1(color);
-            imageView->curvedCanvasSettingsHelper->Reset();
+            imageView->_curvedCanvasSettingsHelper->Reset();
 
             ShowLoading(true);
             UpdatePreview(true);
@@ -77,7 +85,7 @@ namespace Qosmetics::Walls
 
     void PreviewViewController::SetTitleText(StringW text)
     {
-        if (!(title && title->m_CachedPtr.m_value))
+        if (!(title && title->m_CachedPtr))
             return;
         if (Qosmetics::Core::DateUtils::isMonth(6))
         {
@@ -90,7 +98,7 @@ namespace Qosmetics::Walls
 
     void PreviewViewController::ShowLoading(bool isLoading)
     {
-        if (!(loadingIndicator && loadingIndicator->m_CachedPtr.m_value))
+        if (!(loadingIndicator && loadingIndicator->m_CachedPtr))
             return;
 
         loadingIndicator->get_gameObject()->SetActive(isLoading);
@@ -146,7 +154,7 @@ namespace Qosmetics::Walls
         UnityEngine::Vector4 sizeParams = UnityEngine::Vector4(scale.x, scale.y, scale.z, 0.05f);
 
         // TODO: set colors from selected colorscheme
-        int rendererCount = renderers->Length();
+        int rendererCount = renderers.size();
         for (auto renderer : renderers)
         {
             auto materials = renderer->GetMaterialArray();
@@ -159,10 +167,10 @@ namespace Qosmetics::Walls
     }
     void PreviewViewController::InstantiatePrefab()
     {
-        if (wallModelContainer->currentWallObject)
+        if (wallModelContainer->CurrentWallObject)
         {
-            DEBUG("Found a new wall object, instantiating it! name: {}", wallModelContainer->currentWallObject->get_name());
-            currentPrefab = UnityEngine::Object::Instantiate(wallModelContainer->currentWallObject, get_transform());
+            DEBUG("Found a new wall object, instantiating it! name: {}", wallModelContainer->CurrentWallObject->get_name());
+            currentPrefab = UnityEngine::Object::Instantiate(wallModelContainer->CurrentWallObject, get_transform());
             currentPrefab->SetActive(true);
             auto t = currentPrefab->get_transform();
             auto s = get_transform()->get_lossyScale();

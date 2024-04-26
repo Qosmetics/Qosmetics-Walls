@@ -24,7 +24,7 @@
 
 auto getModelContainer()
 {
-    return UnityEngine::Resources::FindObjectsOfTypeAll<Qosmetics::Walls::WallModelContainer*>().FirstOrDefault();
+    return UnityEngine::Resources::FindObjectsOfTypeAll<Qosmetics::Walls::WallModelContainer*>()->FirstOrDefault();
 }
 
 EXPOSE_API(GetActiveDescriptor, Qosmetics::Core::Descriptor)
@@ -59,13 +59,13 @@ EXPOSE_API(SetActive, bool, std::string fileName)
     return WALLMODELCONTAINER->LoadObject(manifest, nullptr);
 }
 
-EXPOSE_API(GetCoreMaterials, ArrayW<UnityEngine::Material*>)
+EXPOSE_API(GetCoreMaterials, ArrayW<UnityW<UnityEngine::Material>>)
 {
     GET_WALLMODELCONTAINER();
-    if (!wallModelContainer->currentWallObject)
+    if (!wallModelContainer->CurrentWallObject)
         return nullptr;
 
-    auto core = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
+    auto core = wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Core());
     if (!core)
         return nullptr;
     auto meshRenderer = core->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
@@ -74,13 +74,13 @@ EXPOSE_API(GetCoreMaterials, ArrayW<UnityEngine::Material*>)
     return meshRenderer->GetMaterialArray();
 }
 
-EXPOSE_API(GetFrameMaterial, ArrayW<UnityEngine::Material*>)
+EXPOSE_API(GetFrameMaterial, ArrayW<UnityW<UnityEngine::Material>>)
 {
     GET_WALLMODELCONTAINER();
-    if (!wallModelContainer->currentWallObject)
+    if (!wallModelContainer->CurrentWallObject)
         return nullptr;
 
-    auto frame = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+    auto frame = wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Frame());
     if (!frame)
         return nullptr;
     auto meshRenderer = frame->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
@@ -92,10 +92,10 @@ EXPOSE_API(GetFrameMaterial, ArrayW<UnityEngine::Material*>)
 EXPOSE_API(GetCoreMesh, UnityEngine::Mesh*)
 {
     GET_WALLMODELCONTAINER();
-    if (!wallModelContainer->currentWallObject)
+    if (!wallModelContainer->CurrentWallObject)
         return nullptr;
 
-    auto core = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
+    auto core = wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Core());
     if (!core)
         return nullptr;
     auto meshFilter = core->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
@@ -107,10 +107,10 @@ EXPOSE_API(GetCoreMesh, UnityEngine::Mesh*)
 EXPOSE_API(GetFrameMesh, UnityEngine::Mesh*)
 {
     GET_WALLMODELCONTAINER();
-    if (!wallModelContainer->currentWallObject)
+    if (!wallModelContainer->CurrentWallObject)
         return nullptr;
 
-    auto frame = wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+    auto frame = wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Frame());
     if (!frame)
         return nullptr;
     auto meshFilter = frame->get_gameObject()->GetComponent<UnityEngine::MeshFilter*>();
@@ -123,19 +123,19 @@ EXPOSE_API(GetPrefabClone, UnityEngine::GameObject*)
 {
     GET_WALLMODELCONTAINER();
 
-    if (!wallModelContainer->currentWallObject)
+    if (!wallModelContainer->CurrentWallObject)
         return nullptr;
-    return UnityEngine::Object::Instantiate(wallModelContainer->currentWallObject);
+    return UnityEngine::Object::Instantiate(wallModelContainer->CurrentWallObject);
 }
 
 EXPOSE_API(GetPrefab, UnityEngine::GameObject*)
 {
-    return WALLMODELCONTAINER->currentWallObject;
+    return WALLMODELCONTAINER->CurrentWallObject;
 }
 
 EXPOSE_API(GetWallIsCustom, bool)
 {
-    return WALLMODELCONTAINER->currentWallObject != nullptr;
+    return WALLMODELCONTAINER->CurrentWallObject != nullptr;
 }
 
 EXPOSE_API(GetWallsDisabled, bool)
@@ -143,12 +143,12 @@ EXPOSE_API(GetWallsDisabled, bool)
     return Qosmetics::Walls::Disabling::GetAnyDisabling();
 }
 
-EXPOSE_API(UnregisterWallDisablingInfo, void, ModInfo info)
+EXPOSE_API(UnregisterWallDisablingInfo, void, modloader::ModInfo info)
 {
     Qosmetics::Walls::Disabling::UnregisterDisablingModInfo(info);
 }
 
-EXPOSE_API(RegisterWallDisablingInfo, void, ModInfo info)
+EXPOSE_API(RegisterWallDisablingInfo, void, modloader::ModInfo info)
 {
     Qosmetics::Walls::Disabling::RegisterDisablingModInfo(info);
 }

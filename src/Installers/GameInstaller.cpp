@@ -78,7 +78,7 @@ namespace Qosmetics::Walls
 
         auto boxParent = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxParent*>();
         auto boxHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxHandler*>();
-        boxParent->handler = boxHandler;
+        boxParent->Handler = boxHandler;
         auto boxColorHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
 
         auto& globalConfig = Qosmetics::Walls::Config::get_config();
@@ -89,12 +89,12 @@ namespace Qosmetics::Walls
 
         auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
         // conditionalActivation->value->set_value(true);
-        conditionalActivation->activateOnFalse = !conditionalActivation->activateOnFalse;
+        conditionalActivation->_activateOnFalse = !conditionalActivation->_activateOnFalse;
 
         auto conditionalActivation2 = obstacleFakeGlowT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
         // conditionalActivation2->value->set_value(true);
-        conditionalActivation2->activateOnFalse = !conditionalActivation2->activateOnFalse;
-        if (_wallModelContainer->currentWallObject)
+        conditionalActivation2->_activateOnFalse = !conditionalActivation2->_activateOnFalse;
+        if (_wallModelContainer->CurrentWallObject)
         {
             DEBUG("There's a wall selected");
             auto& config = _wallModelContainer->GetWallConfig();
@@ -102,8 +102,8 @@ namespace Qosmetics::Walls
             auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
             auto coreRenderer = obstacleCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
 
-            auto customCoreT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Core());
-            auto customFrameT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+            auto customCoreT = _wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Core());
+            auto customFrameT = _wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Frame());
 
 #ifdef HAS_CHROMA
             auto callbackOpt = Chroma::ObstacleAPI::getObstacleChangedColorCallbackSafe();
@@ -138,7 +138,7 @@ namespace Qosmetics::Walls
                 if (config.get_replaceFrameMaterial())
                 {
                     DEBUG("Replace frame material");
-                    frameRenderer->SetMaterialArray(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+                    frameRenderer->SetMaterialArray(customFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray().convert());
                 }
             }
 
@@ -159,7 +159,7 @@ namespace Qosmetics::Walls
                 {
                     DEBUG("Replace core material");
                     UnityEngine::Object::DestroyImmediate(obstacleCoreT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalMaterialSwitcher*>());
-                    coreRenderer->SetMaterialArray(customCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray());
+                    coreRenderer->SetMaterialArray(customCoreT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>()->GetMaterialArray().convert());
                 }
             }
             auto colorScheme = _gameplayCoreSceneSetupData->colorScheme;
@@ -198,7 +198,7 @@ namespace Qosmetics::Walls
 
         auto boxParent = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxParent*>();
         auto boxHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxHandler*>();
-        boxParent->handler = boxHandler;
+        boxParent->Handler = boxHandler;
         auto boxColorHandler = original->get_gameObject()->AddComponent<Qosmetics::Walls::BoxColorHandler*>();
 
         auto& globalConfig = Qosmetics::Walls::Config::get_config();
@@ -209,13 +209,13 @@ namespace Qosmetics::Walls
         {
             frameFilter->set_mesh(nullptr);
         }
-        else if (_wallModelContainer->currentWallObject && config.get_isMirrorable())
+        else if (_wallModelContainer->CurrentWallObject && config.get_isMirrorable())
         {
             DEBUG("There's a wall selected");
 
             auto frameRenderer = obstacleFrameT->get_gameObject()->GetComponent<UnityEngine::MeshRenderer*>();
 
-            auto customFrameT = _wallModelContainer->currentWallObject->get_transform()->Find(ConstStrings::Frame());
+            auto customFrameT = _wallModelContainer->CurrentWallObject->get_transform()->Find(ConstStrings::Frame());
 
             if (config.get_disableFrame() || globalConfig.forceFrameOff) // frame needs to be off
             {
@@ -227,8 +227,8 @@ namespace Qosmetics::Walls
                 DEBUG("keep frame");
                 // doing this lets us keep the frame on
                 auto conditionalActivation = obstacleFrameT->get_gameObject()->GetComponent<GlobalNamespace::ConditionalActivation*>();
-                conditionalActivation->value->set_value(true);
-                conditionalActivation->activateOnFalse = false;
+                conditionalActivation->_value->set_value(true);
+                conditionalActivation->_activateOnFalse = false;
 
                 if (config.get_replaceFrameMesh())
                 {
@@ -260,7 +260,7 @@ namespace Qosmetics::Walls
                         if (material->HasProperty(PropertyID::_BlendSrcFactorA()))
                             material->SetFloat(PropertyID::_BlendSrcFactorA(), 0);
                     }
-                    frameRenderer->SetMaterialArray(materials);
+                    frameRenderer->SetMaterialArray(materials.convert());
                 }
             }
             auto colorScheme = _gameplayCoreSceneSetupData->colorScheme;

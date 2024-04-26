@@ -4,7 +4,9 @@
 #include "UnityEngine/Mesh.hpp"
 #include "WallsConfig.hpp"
 #include "conditional-dependencies/shared/main.hpp"
+#include "scotland2/shared/loader.hpp"
 #include <optional>
+
 #if __has_include("qosmetics-core/shared/Data/Descriptor.hpp")
 #include "qosmetics-core/shared/Data/Descriptor.hpp"
 #ifndef QOSMETICS_CORE
@@ -14,8 +16,9 @@
 
 #if __has_include("UnityEngine/Material.hpp")
 #include "UnityEngine/Material.hpp"
-#else 
-namespace UnityEngine {
+#else
+namespace UnityEngine
+{
     typedef Il2CppObject Material;
     typedef Il2CppObject Mesh;
     typedef Il2CppObject GameObject;
@@ -162,18 +165,18 @@ namespace Qosmetics::Walls::API
 
     /// @brief Unregister your mod as disabling Walls replacements
     /// @param info your mod info
-    void UnregisterWallDisablingInfo(ModInfo info)
+    void UnregisterWallDisablingInfo(modloader::ModInfo info)
     {
-        static auto function = CondDeps::Find<void, ModInfo>(QOSMETICS_WALLS, "UnregisterWallDisablingInfo");
+        static auto function = CondDeps::Find<void, modloader::ModInfo>(QOSMETICS_WALLS, "UnregisterWallDisablingInfo");
         if (function)
             function.value()(info);
     }
 
     /// @brief register your mod as disabling Walls replacements
     /// @param info your mod info
-    void RegisterWallDisablingInfo(ModInfo info)
+    void RegisterWallDisablingInfo(modloader::ModInfo info)
     {
-        static auto function = CondDeps::Find<void, ModInfo>(QOSMETICS_WALLS, "RegisterWallDisablingInfo");
+        static auto function = CondDeps::Find<void, modloader::ModInfo>(QOSMETICS_WALLS, "RegisterWallDisablingInfo");
         if (function)
             function.value()(info);
     }

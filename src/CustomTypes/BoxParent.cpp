@@ -24,16 +24,16 @@ namespace Qosmetics::Walls
         auto castedObstacleController = il2cpp_utils::try_cast<GlobalNamespace::ObstacleController>(obstacleController);
         if (castedObstacleController)
         {
-            colorManager = castedObstacleController.value()->colorManager;
+            colorManager = castedObstacleController.value()->_colorManager;
         }
         else
         {
             auto castedObstacleController = il2cpp_utils::try_cast<GlobalNamespace::MirroredObstacleController>(obstacleController);
             if (castedObstacleController)
             {
-                auto obstacleController = castedObstacleController.value()->followedObstacle;
+                auto obstacleController = castedObstacleController.value()->_followedObstacle;
                 if (obstacleController)
-                    colorManager = obstacleController->colorManager;
+                    colorManager = obstacleController->_colorManager;
             }
         }
 
@@ -66,4 +66,6 @@ namespace Qosmetics::Walls
             handler->SetColor(color);
     }
 
+    BoxHandler* BoxParent::get_Handler() const { return handler; }
+    void BoxParent::set_Handler(BoxHandler* handler) { this->handler = handler; }
 }
