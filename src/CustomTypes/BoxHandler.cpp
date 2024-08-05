@@ -34,10 +34,10 @@ namespace Qosmetics::Walls
         {
             static auto finfo = find_field_in_object_klasses(obstacleController->klass, "_stretchableObstacle");
             auto stretchableObstacle = reinterpret_cast<GlobalNamespace::StretchableObstacle*>(il2cpp_functions::field_get_value_object(finfo, obstacleController));
-            if (stretchableObstacle && stretchableObstacle->m_CachedPtr)
+            if (stretchableObstacle && stretchableObstacle->m_CachedPtr.m_value)
             {
                 auto frameController = stretchableObstacle->_obstacleFrame;
-                if (frameController && frameController->m_CachedPtr)
+                if (frameController && frameController->m_CachedPtr.m_value)
                 {
                     stretchableObstacle->SetSizeAndColor(frameController->width, frameController->height, frameController->length, color);
                 }

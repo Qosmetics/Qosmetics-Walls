@@ -58,7 +58,7 @@ namespace Qosmetics::Walls
             }
         }
 
-        if (titleGradientUpdater && titleGradientUpdater->m_CachedPtr)
+        if (titleGradientUpdater && titleGradientUpdater->m_CachedPtr.m_value)
             titleGradientUpdater->set_enabled(true);
 
         Qosmetics::Core::UIUtils::SetTitleColor(titleView, UnityEngine::Color::get_magenta());
@@ -66,7 +66,7 @@ namespace Qosmetics::Walls
 
     void BoxFlowCoordinator::DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
     {
-        if (!titleGradientUpdater || !titleGradientUpdater->m_CachedPtr)
+        if (!titleGradientUpdater || !titleGradientUpdater->m_CachedPtr.m_value)
             return;
         titleGradientUpdater->set_enabled(false);
     }
