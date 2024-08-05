@@ -170,10 +170,10 @@ namespace Qosmetics::Walls
 
     void WallModelContainer::Unload()
     {
-        if (currentWallObject && currentWallObject->m_CachedPtr)
+        if (currentWallObject && currentWallObject->m_CachedPtr.m_value)
             Object::DestroyImmediate(currentWallObject);
         currentWallObject = nullptr;
-        if (bundle && bundle->m_CachedPtr)
+        if (bundle && bundle->m_CachedPtr.m_value)
             bundle->Unload(true);
         bundle = nullptr;
     }
